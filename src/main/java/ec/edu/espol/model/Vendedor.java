@@ -18,6 +18,7 @@ import javax.mail.internet.*;
  *
  * @author davidperez
  */
+// mvn install:install-file -Dfile=target/javax.mail.jar -DgroupId=ec.edu.espol -DartifactId=proyecto2P -Dversion=1.0-SNAPSHOT -Dpackaging=jar
 public class Vendedor extends Usuario{
     
     private ArrayList<Vehiculo> vehiculos;    
