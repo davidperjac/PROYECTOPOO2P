@@ -188,12 +188,8 @@ public class Usuario {
         
     }
     
-    /*
-    public void crearArchivos() {
-        File vehiculos = new File();
-        
-    }
-    */
+
+
     
     //funciones de validacion
     

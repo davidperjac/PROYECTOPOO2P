@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package ec.edu.espol.proyecto_1p;
+package ec.edu.espol.model;
 import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Usuario;
 import ec.edu.espol.model.Vehiculo;

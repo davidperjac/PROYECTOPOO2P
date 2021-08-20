@@ -84,14 +84,13 @@ public class Vendedor extends Usuario{
                     //Vendedor.enviarCorreo(o.getCorreo_comprador(),v.getMarca(),v.getModelo(),v.getMotor(),o.getPrecio_ofertado(),v.getPlaca());
                     //borrar en base de datos
                     v.borrarVehiculo();
-
                 }
             }
         }  
     }
     
     //extras 
-    /*
+    
     public static void enviarCorreo(String destinatario, String marca, String modelo,String motor, double dinero, String placa) {
 
         Properties props = new Properties();
@@ -123,7 +122,7 @@ public class Vendedor extends Usuario{
             e.printStackTrace();   //Si se produce un error
         }
     }
-    */
+    
     public static Vendedor searchByID(ArrayList<Vendedor> vendedores, int id){
         for(Vendedor v : vendedores){
             if(v.getId() == id){
@@ -157,5 +156,4 @@ public class Vendedor extends Usuario{
         System.out.println(" -------------------------------------------------------------------------------- ");
         return u;
     }
-    
 }
