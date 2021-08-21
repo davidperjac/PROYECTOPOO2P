@@ -28,18 +28,6 @@ public class Util {
     
     //menu
     
-    public static void menuInicio(){
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        System.out.println("|Bienvenido al Sistema de Compra y Venta de Vehiculos SDF /PEREZ/DECASTRO/BUCHELI|");
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        
-        System.out.println("");
-        System.out.println(String.format("%50s","Menu de Opciones"+"\n" ));
-        System.out.println(String.format("%45s","1. Vendedor"+"\n"));
-        System.out.println(String.format("%46s","2. Comprador"+"\n"));
-        System.out.println(String.format("%42s","3. Salir"+"\n"));
-    }
-    
     public static boolean isNumeric(String str) { 
         try {  
           Double.parseDouble(str);  
@@ -48,10 +36,22 @@ public class Util {
           return false;  
         }  
     }
+    
+    public static boolean isAlpha(String name) {
+        char[] chars = name.toCharArray();
+
+        for (char c : chars) {
+            if(!Character.isLetter(c)) {
+                return false;
+            }
+        }
+
+        return true;
+    }
    
     
     //extras
-    
+    /*
     public static int nextID(String nomfile) {
         int id = 0;
         try (Scanner sc = new Scanner (new File(nomfile))) {
@@ -68,7 +68,7 @@ public class Util {
         }
         return id+1;
     }
-    
+    */
     public static void removerLinea(String nomFile, int id, int num){
         File oldFile = new File(nomFile);
         File newFile = new File("temp.txt");

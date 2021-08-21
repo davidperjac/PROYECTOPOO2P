@@ -25,13 +25,13 @@ public class Vendedor extends Usuario{
     
     //Constructor
     
-    public Vendedor ( int id,String correo, String clave, String nombres, String apellidos, String organizacion) {
-        super(id,correo,clave,nombres,apellidos,organizacion);
+    public Vendedor ( String correo, String clave, String nombres, String apellidos, String organizacion) {
+        super(correo,clave,nombres,apellidos,organizacion);
         this.vehiculos = new ArrayList<>();
     }
     
     public Vendedor(Usuario u){
-        super(u.getId(), u.getCorreo(), u.getClave(), u.getNombres(),u.getApellidos(),u.getOrganizacion());
+        super(u.getCorreo(), u.getClave(), u.getNombres(),u.getApellidos(),u.getOrganizacion());
         this.vehiculos = new ArrayList<>();   
     }
     
@@ -123,14 +123,6 @@ public class Vendedor extends Usuario{
         }
     }
     
-    public static Vendedor searchByID(ArrayList<Vendedor> vendedores, int id){
-        for(Vendedor v : vendedores){
-            if(v.getId() == id){
-                return v;
-            }
-        }
-        return null;
-    }
     
     public static int menuVendedor(Scanner sc){
         

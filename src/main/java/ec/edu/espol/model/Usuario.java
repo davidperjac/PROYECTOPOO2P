@@ -5,13 +5,20 @@
  */
 package ec.edu.espol.model;
 
+import ec.edu.espol.exceptions.CorreoException;
 import ec.edu.espol.util.GFG;
 import ec.edu.espol.util.Util;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -21,8 +28,7 @@ import java.util.regex.Pattern;
  *
  * @author davidperez
  */
-public class Usuario {
-    protected int id;
+public class Usuario implements Serializable{
     protected String correo;
     protected String clave;
     protected String nombres;
@@ -31,8 +37,7 @@ public class Usuario {
     
     //constructor
     
-    public Usuario(int id, String correo, String clave, String nombres, String apellidos, String organizacion){
-        this.id = id;
+    public Usuario(String correo, String clave, String nombres, String apellidos, String organizacion){
         this.correo = correo;
         this.clave = clave;
         this.nombres = nombres;
@@ -41,14 +46,6 @@ public class Usuario {
     }
     
     //getters y setters
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
 
     public String getCorreo() {
         return correo;
@@ -95,21 +92,17 @@ public class Usuario {
     
     public static ArrayList<String> recuperarCorreos(String nomfile){
         ArrayList<String> correos = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(nomfile))){
-            while(sc.hasNextLine()){
-                // linea = id|correo|...
-                String linea = sc.nextLine();
-                String[] tokens = linea.split("\\|");
-                String correo = tokens[1];
-                correos.add(correo);
-            }
+        
+        ArrayList<Usuario> usuarios = Usuario.recuperarUsuarios(nomfile);
+        
+        for (Usuario u : usuarios) {
+            correos.add(u.getCorreo());
         }
-        catch(Exception e){
- 
-        }
+     
         return correos;
     }
     //recuperar con correo
+    
     public static Usuario recuperarUsuario(String correo, String nomfile){
         ArrayList<Usuario> usuarios = Usuario.recuperarUsuarios(nomfile);
         for (Usuario u: usuarios){
@@ -118,79 +111,54 @@ public class Usuario {
         }
         return null;
     }
+    //nuevas con serializacion
     
-    public static ArrayList<Usuario> recuperarUsuarios (String nomfile){
-        ArrayList<Usuario> usuarios = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(nomfile))) {
-             while(sc.hasNextLine()){
-                // linea = id|correo|clave|nombres|apellidos|organizacion
-                String linea = sc.nextLine();
-                String[] tokens = linea.split("\\|");
-                Usuario u = new Usuario(Integer.parseInt(tokens[0]), tokens[1], tokens [2], tokens[3], tokens[4], tokens[5]);
-                usuarios.add(u);
-            }
-        }catch(Exception e){
+    public static ArrayList<Usuario> recuperarUsuarios (String nomArchivo){
+        try (FileInputStream fin = new FileInputStream(nomArchivo);ObjectInputStream oin = new ObjectInputStream(fin);) {
+            ArrayList<Usuario> usuarios = (ArrayList<Usuario>) oin.readObject();
+        return usuarios;
+        }catch(IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return null; 
+    }
+    
+    public static void guardarUsuarios(String nomArchivo, ArrayList<Usuario> usuarios){
+        try(FileOutputStream fous = new FileOutputStream (nomArchivo);ObjectOutputStream out = new ObjectOutputStream (fous);){
+            out.writeObject(usuarios);
+            out.flush();
+        }catch(IOException e) {
             System.out.println(e.getMessage());
         }
-        return usuarios;
     }
     
     //comportamientos problema
 
-    
-    public static void nextUsuario(Scanner sc, String nomfile) throws NoSuchAlgorithmException{
-        sc.useDelimiter("\n");
-        System.out.println("REGISTRAR UN NUEVO USUARIO");
-        
-        String correo;
+    //constructor que valide cosas
+    public static Usuario nextUsuario(String nomfile, String correo, String clave, String nombres, String apellidos, String organizacion) throws NoSuchAlgorithmException, CorreoException, InputMismatchException{        
         boolean corrExis;
         boolean corrValid;
         do{
-            System.out.println( "Introduzca su correo electrónico: " );
-            correo = sc.next().toLowerCase();
             corrExis = correoExistente(correo, nomfile);
             corrValid = validarCorreo(correo);
             if (!corrValid)
-                System.out.println("Por favor ingrese un correo válido.");
+                throw new CorreoException("ERROR! Ese correo no es valido");
             else if (corrExis)
-                System.out.println("El correo que ingresó ya posee una cuenta, por favor ingrese otro correo si desea continuar.");
+                throw new CorreoException("ERROR! Ese correo ya existe");
         }while(!corrValid || corrExis);
         
-        System.out.println( "Introduzca una clave: " );
-        String clave = sc.next();
-        String hashclave;
-        hashclave = GFG.toHexString(GFG.getSHA(clave));
-        System.out.println( "Introduzca sus nombres: " );
-        String nombres = sc.next();
-        System.out.println( "Introduzca sus apellidos: " );
-        String apellidos = sc.next();
-        System.out.println( "Introduzca su organizacion: " );
-        String organizacion = sc.next();
-        int id = Util.nextID(nomfile);
-        Usuario u = new Usuario(id, correo, hashclave, nombres, apellidos, organizacion);
-        u.saveFile(nomfile);
-        System.out.println("\n");
-        System.out.println("Se ha registrado su usuario con éxtio.");
-        System.out.println(" -------------------------------------------------------------------------------- ");
-    }
-    
-    
-    //funcion de file
-    
-    public void saveFile(String nomfile){
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true))) {
-            pw.println (this.id+"|"+this.correo+"|"+this.clave+"|"+this.nombres+"|"+this.apellidos+"|"+this.organizacion);
-            
-        }
-        catch (Exception e){
-            System.out.println(e.getMessage());
+        String hashclave = GFG.toHexString(GFG.getSHA(clave));
+        
+        if (!Util.isAlpha(nombres) || !Util.isAlpha(apellidos) || !Util.isAlpha(organizacion) ) {
+            throw new InputMismatchException();
         }
         
+        Usuario u = new Usuario(correo, hashclave, nombres, apellidos, organizacion);
+        return u;
     }
-    
 
-
-    
     //funciones de validacion
     
     public static boolean validarUsuario(String correo, String clave,String nomfile) throws NoSuchAlgorithmException{
@@ -226,12 +194,12 @@ public class Usuario {
         if (this.getClass() != o.getClass())
             return false;
         Usuario other = (Usuario) o;
-        return (this.id == other.id);
+        return (this.correo.equals(other.correo));
     }
-    
+   
     @Override
     public String toString(){
-        String s = "USUARIO\nNombres: " +this.nombres + "\nApellidos: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nOrganización " + this.organizacion+ "\nID de usuario: " + this.id+ "";
+        String s = "USUARIO\nNombres: " +this.nombres + "\nApellidos: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nOrganización " + this.organizacion;
         return s;
     }
 }

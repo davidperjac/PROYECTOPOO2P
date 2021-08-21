@@ -16,9 +16,7 @@ import java.util.Scanner;
  * @author davidperez
  */
 public class Oferta {
-    private int id;
-    private int id_Comprador;
-    private int id_Vehiculo;
+    private String placa_vehiculo;
     private double precio_ofertado;
     private Vehiculo vehiculo;
     private Comprador comprador;
@@ -26,27 +24,13 @@ public class Oferta {
     
     //constructor
 
-    public Oferta(int id, int id_Comprador, int id_Vehiculo, double precio_ofertado, String correo_comprador) {
-        this.id = id;
-        this.id_Comprador = id_Comprador;
-        this.id_Vehiculo = id_Vehiculo;
+    public Oferta(String placa_vehiculo, double precio_ofertado, String correo_comprador) {
+        this.placa_vehiculo = placa_vehiculo;
         this.precio_ofertado = precio_ofertado;
         this.correo_comprador = correo_comprador;
     }
     
     //getters y setters
-
-    public int getId() {
-        return id;
-    }
-
-    public int getId_Comprador() {
-        return id_Comprador;
-    }
-
-    public int getId_Vehiculo() {
-        return id_Vehiculo;
-    }
 
     public double getPrecio_ofertado() {
         return precio_ofertado;
@@ -62,18 +46,6 @@ public class Oferta {
 
     public String getCorreo_comprador() {
         return correo_comprador;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
-    public void setId_Comprador(int id_Comprador) {
-        this.id_Comprador = id_Comprador;
-    }
-
-    public void setId_Vehiculo(int id_Vehiculo) {
-        this.id_Vehiculo = id_Vehiculo;
     }
 
     public void setPrecio_ofertado(double precio_ofertado) {

@@ -21,7 +21,6 @@ import java.util.regex.Pattern;
  */
 public class Vehiculo {
 
-    private int id;
     private String tipo;
     private String placa;
     private String marca;
@@ -41,8 +40,7 @@ public class Vehiculo {
     
     // Constructor de Autos
  
-    public Vehiculo(int id, String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
-        this.id = id;
+    public Vehiculo(String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
         this.tipo = tipo;
         this.id_vendedor = id_vendedor;
         this.placa = placa;
@@ -61,8 +59,7 @@ public class Vehiculo {
     
     // Constructor de Camionetas
     
-    public Vehiculo(int id, String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
-        this.id = id;
+    public Vehiculo(String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
         this.tipo = tipo;
         this.id_vendedor = id_vendedor;
         this.placa = placa;
@@ -82,8 +79,7 @@ public class Vehiculo {
     
     // Constructor de motos
     
-    public Vehiculo(int id, String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
-        this.id = id;
+    public Vehiculo( String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
         this.tipo = tipo;
         this.id_vendedor = id_vendedor;
         this.placa = placa;
@@ -99,14 +95,6 @@ public class Vehiculo {
     }
 
     //getters y setters
-
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
     
     public String getPlaca() {
         return placa;
@@ -269,7 +257,7 @@ public class Vehiculo {
                             i += 1;       
                     }   
                     else if(opcion == 2){
-                        Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
+                        //Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
                         opcion = 4;
                         return this.ofertas.get(i);
                     }
@@ -292,7 +280,7 @@ public class Vehiculo {
                             i -= 1;
                     }
                     else if(opcion == 3){
-                        Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
+                        //Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
                         opcion = 4;
                         return this.ofertas.get(i);
                     }
@@ -414,33 +402,12 @@ public class Vehiculo {
     //funciones de file
     
     public void saveFile(String nomfile) {
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true)) ) {
-            String linea = this.id + "|" + this.tipo + "|" + this.id_vendedor + "|" + this.getPlaca()+"|"+this.getMarca()+"|"+this.getMotor()+"|"+this.getAnio()+ "|" +this.getModelo()+ "|"+this.getRecorrido()+"|"+this.getColor()+"|"+this.getCombustible()+"|"+this.getPrecio();
-            if(this.getTipo().equals("CARRO")) {
-                pw.println( linea +"|"+this.getVidrios()+"|"+this.getTransmision() );                                        
-            }else if (this.getTipo().equals("MOTO")) {
-                pw.println( linea );                                        
-            }else if (this.getTipo().equals("CAMIONETA")){
-                pw.println( linea +"|"+this.getVidrios()+"|"+this.getTransmision()+"|"+this.getTraccion() );                                        
-            } 
-        }catch (Exception e){
-            System.out.println(e.getMessage()+"\n");
-        }
+
         
     } 
     
     public static ArrayList<Vehiculo> readFile(String nomfile) {
-        ArrayList<Vehiculo> vehiculos = new ArrayList<>();
-        try (Scanner sc = new Scanner(new File(nomfile))) {
-            while(sc.hasNextLine()){
-                String linea = sc.nextLine();
-                String [] tokens = linea.split("\\|");
-                agregarVehiculos(tokens, vehiculos);
-            }   
-        }
-        catch(Exception e) {
-        }
-        return vehiculos;
+
     }
     
 
@@ -461,7 +428,7 @@ public class Vehiculo {
         }
         return vehiculos2;
     }
-    
+   
     public static void link(ArrayList<Vehiculo> vehiculos, ArrayList<Vendedor> vendedores){
         for(Vehiculo v : vehiculos){
             Vendedor vend = Vendedor.searchByID(vendedores, v.getId_vendedor());
@@ -506,15 +473,6 @@ public class Vehiculo {
     
     //funciones searchby
     
-    // Busca un Vehiculo por id
-    public static Vehiculo searchByID(ArrayList<Vehiculo> vehiculos, int id){
-        
-        for(Vehiculo v : vehiculos){
-            if(v.id == id)
-                return v;
-        }
-        return null;
-    }
     
     // Busca un Vehiculo por placa
     public static Vehiculo searchByPlaca(ArrayList<Vehiculo> vehiculos, String placa){
@@ -580,6 +538,6 @@ public class Vehiculo {
         
         Vehiculo other = (Vehiculo)o;
         
-        return Objects.equals(this.id, other.id);   
+        return (this.placa.equals(other.placa)); 
     }
 }
