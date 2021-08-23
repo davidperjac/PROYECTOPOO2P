@@ -6,8 +6,13 @@
 package ec.edu.espol.model;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -15,7 +20,7 @@ import java.util.Scanner;
  *
  * @author davidperez
  */
-public class Oferta {
+public class Oferta implements Serializable{
     private String placa_vehiculo;
     private double precio_ofertado;
     private Vehiculo vehiculo;
@@ -64,38 +69,31 @@ public class Oferta {
         this.correo_comprador = correo_comprador;
     }
     
-    //funciones de file
+    //funciones de serializacion
     
-    public void saveFile(String nomfile) {
-        
-        try (PrintWriter pw = new PrintWriter(new FileOutputStream(new File(nomfile),true)) ) {
-            
-            pw.println (this.id+"|"+this.id_Comprador+"|"+this.id_Vehiculo+"|"+this.precio_ofertado + "|" + this.correo_comprador);
-
-            
-        }catch (Exception e){
+    public static ArrayList<Oferta> recuperarOfertas(String nomArchivo) {
+        try (FileInputStream fin = new FileInputStream(nomArchivo);ObjectInputStream oin = new ObjectInputStream(fin);) {
+            ArrayList<Oferta> ofertas = (ArrayList<Oferta>) oin.readObject();
+        return ofertas;
+        }catch(IOException e) {
             System.out.println(e.getMessage());
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
         }
+        return null; 
     }
     
-    public static ArrayList<Oferta> readFile(String nomfile) {
-        ArrayList<Oferta> ofertas = new ArrayList<Oferta>();
-        
-        try (Scanner sc = new Scanner(new File(nomfile))) {
-            while(sc.hasNextLine()){
-            String linea = sc.nextLine();
-            String [] tokens = linea.split("\\|");
-            Oferta o = new Oferta(Integer.parseInt(tokens[0]), Integer.parseInt(tokens[1]), Integer.parseInt(tokens[2]), Double.parseDouble(tokens[3]), tokens[4]);
-            ofertas.add(o);
-            }  
-        }catch(Exception e) {
+    public void guardarOfertas(String nomArchivo, ArrayList<Oferta> ofertas) {
+        try(FileOutputStream fous = new FileOutputStream (nomArchivo);ObjectOutputStream out = new ObjectOutputStream (fous);){
+            out.writeObject(ofertas);
+            out.flush();
+        }catch(IOException e) {
             System.out.println(e.getMessage());
         }
-        return ofertas;
     }
     
     //funciones de link
-    
+    /*
     public static void link(ArrayList<Comprador> compradores, ArrayList<Vehiculo> vehiculos, ArrayList<Oferta> ofertas) {
         for(Oferta o : ofertas){
             Comprador c = Comprador.searchByID(compradores, o.getId_Comprador());
@@ -106,7 +104,7 @@ public class Oferta {
             o.setVehiculo(v);
         }
     }
-    
+    */
     //sobreescrituras
     
     @Override

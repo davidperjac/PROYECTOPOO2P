@@ -7,7 +7,10 @@ package ec.edu.espol.controller;
 
 import ec.edu.espol.exceptions.ContraseñaException;
 import ec.edu.espol.exceptions.CorreoException;
+import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Usuario;
+import ec.edu.espol.proyecto2p.App;
+import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
@@ -16,6 +19,7 @@ import java.util.ResourceBundle;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
@@ -49,14 +53,26 @@ public class RegisterController implements Initializable {
     private PasswordField contraseña;
     @FXML
     private ComboBox rolcbx;
+    @FXML
+    private Button atrasbtn;
 
     /**
      * Initializes the controller class.
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.compradores = Usuario.recuperarUsuarios("compradores.txt");
-        this.vendedores = Usuario.recuperarUsuarios("vendedores.txt");
+        
+        if (Usuario.recuperarUsuarios("compradores.ser") == null) {
+            this.compradores = new ArrayList<Usuario>();
+        }else {
+            this.compradores = Usuario.recuperarUsuarios("compradores.ser");
+        }
+        
+        if (Usuario.recuperarUsuarios("vendedores.ser") == null) {
+            this.vendedores = new ArrayList<Usuario>();
+        }else {
+            this.vendedores = Usuario.recuperarUsuarios("vendedores.ser");
+        }
         
         ArrayList<String> roles = new ArrayList<String>();
         roles.add("Vendedor");
@@ -66,24 +82,32 @@ public class RegisterController implements Initializable {
         rolcbx.setItems(FXCollections.observableArrayList(roles));
 
     }    
-    // String item = (String)cbox.getValue();
     @FXML
     private void registrar(MouseEvent event) {
         try {
-            if (!contraseña.getText().equals(conf_contra.getText())) {
-                throw new ContraseñaException("ERROR! Las contraseñas no son iguales");
+            if (rol == null || correo == null || nombres == null || apellidos == null || org == null || contraseña == null || conf_contra == null) {
+                Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Llene todos los campos obligatorios");
+                a.show();
+            }else {
+                if (!contraseña.getText().equals(conf_contra.getText())) {
+                    throw new ContraseñaException("ERROR! Las contraseñas no son iguales");
+                }
+
+                if(rol.equals("Vendedor")){
+                    Usuario u = Usuario.nextUsuario("vendedores.ser",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
+                    this.vendedores.add(u);
+                    Usuario.guardarUsuarios("vendedores.ser", vendedores);
+                }else if(rol.equals("Comprador")){
+                    Usuario u = Usuario.nextUsuario("compradores.ser",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
+                    this.vendedores.add(u);
+                    Usuario.guardarUsuarios("comporadores.ser",compradores);
+                }else if (rol.equals("Ambos")) {
+                    System.out.println("");
+                }
+                 Alert a = new Alert(Alert.AlertType.INFORMATION,"Se ha agregado su usuario exitosamente");
+                 a.show();
             }
-            if(rol.equals("Vendedor")){
-                Usuario u= Usuario.nextUsuario("vendedores.txt",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
-            
-            }else if(rol.equals("Comprador")){
-                Usuario u= Usuario.nextUsuario("compradores.txt",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
-            
-            }else if (rol.equals("Ambos")) {
-                
-            }
-            
-            
+  
         }catch (ContraseñaException ce) {
             Alert a = new Alert(Alert.AlertType.ERROR,ce.getMessage());
             a.show();
@@ -101,6 +125,18 @@ public class RegisterController implements Initializable {
     @FXML
     private void escogerRol(ActionEvent event) {
         this.rol = (String)rolcbx.getValue();
+    }
+
+    @FXML
+    private void atras(MouseEvent event) {
+        try {
+            FXMLLoader fxmlloader = App.loadFXMLLoader("login");
+            App.setRoot(fxmlloader);
+        } catch (IOException ex) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+            a.show();
+        }
+        
     }
     
 }

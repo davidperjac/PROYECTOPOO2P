@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.model;
 
+import ec.edu.espol.exceptions.UsuarioException;
 import java.util.ArrayList;
 import java.util.Scanner;
 import ec.edu.espol.model.Vehiculo;
@@ -46,24 +47,7 @@ public class Vendedor extends Usuario{
     }
     
     //comportamientos
-
-    public void ingresarVehiculo(Scanner sc,String nomfile) {
-        
-        System.out.println("Ingrese el tipo de Vehiculo (MOTO, CARRO, CAMIONETA):\n");
-        String tipo = sc.next().toUpperCase();
-        
-        while ( (!tipo.equals("MOTO")  )&&((!tipo.equals("CARRO"))&&((!tipo.equals("CAMIONETA"))  ))) {
-            System.out.println("ERROR! Ingrese un tipo valido"+"\n");
-            tipo = sc.next().toUpperCase();   
-        }
-        
-        Vehiculo.nextVehiculo(sc, nomfile, tipo, this.id);
-        System.out.println("\n");
-        System.out.println("Su vehiculo se ha ingresado exitosamente al sistema.\n");
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        
-    }
-    
+    /*
     public void verOfertas (Scanner sc) {
         
         System.out.println("Ingrese la placa del vehiculo: ");
@@ -88,7 +72,7 @@ public class Vendedor extends Usuario{
             }
         }  
     }
-    
+    */
     //extras 
     
     public static void enviarCorreo(String destinatario, String marca, String modelo,String motor, double dinero, String placa) {
@@ -100,8 +84,8 @@ public class Vendedor extends Usuario{
         props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
         //props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
         
-        props.put("mail.smtp.user", "sistema.sdf.poo@gmail.com");
-        props.put("mail.smtp.clave", "ProyectoPOO");    //La clave de la cuenta
+        props.put("mail.smtp.user", "sistema.dij.poo@gmail.com");
+        props.put("mail.smtp.clave", "ProyectoPOO2P");    //La clave de la cuenta
 
 
         Session session = Session.getDefaultInstance(props);
@@ -112,40 +96,24 @@ public class Vendedor extends Usuario{
             message.setSubject("Oferta aceptada");
             message.setText("Un gusto le saluda el sistema de la app SDF. Se ha aceptado su oferta de $"+dinero+" por el vehiculo "+marca+" "+modelo+" "+motor+" con la placa: "+placa);
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", "sistema.sdf.poo@gmail.com", "ProyectoPOO");
+            transport.connect("smtp.gmail.com", "sistema.dij.poo@gmail.com", "ProyectoPOO2P");
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
             System.out.println("Se ha aceptado la oferta exitosamente y se ha notificado al comprador de su vehículo.");
             System.out.println(" -------------------------------------------------------------------------------- ");
         }
         catch (Exception e) {
-            e.printStackTrace();   //Si se produce un error
+            e.printStackTrace();   
         }
     }
     
-    
-    public static int menuVendedor(Scanner sc){
+    public static Vendedor inicioSesionV(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
         
+        if (!Usuario.validarUsuario(correo,clave,nomfile)) 
+            throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
         
-        System.out.println("1. Ingresar nuevo vendedor\n2. Registrar un vehiculo\n3. Aceptar Ofertas\n4. Regresar"+"\n");
-        int opcion = sc.nextInt();
-        
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        return opcion;
+        Vendedor v = new Vendedor(Usuario.recuperarUsuario(correo, nomfile));
+        return v;
     }
     
-    public static Vendedor inicioSesionV(Scanner sc) throws NoSuchAlgorithmException{
-        String correo;
-        String clave;
-
-        do{
-            System.out.println( "Introduzca su correo electrónico: " );
-            correo = sc.next().toLowerCase();
-            System.out.println( "Introduzca su clave: " );
-            clave = sc.next();
-        }while(!Usuario.validarUsuario(correo,clave,"vendedores.txt"));
-        Vendedor u = new Vendedor(Usuario.recuperarUsuario(correo, "vendedores.txt"));
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        return u;
-    }
 }

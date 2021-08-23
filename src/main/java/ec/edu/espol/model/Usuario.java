@@ -95,16 +95,24 @@ public class Usuario implements Serializable{
         
         ArrayList<Usuario> usuarios = Usuario.recuperarUsuarios(nomfile);
         
-        for (Usuario u : usuarios) {
-            correos.add(u.getCorreo());
+        if (usuarios == null) {
+            return null;
+        }else {
+            for (Usuario u : usuarios) {
+                correos.add(u.getCorreo());
+            }
+            return correos;
         }
-     
-        return correos;
     }
     //recuperar con correo
     
     public static Usuario recuperarUsuario(String correo, String nomfile){
         ArrayList<Usuario> usuarios = Usuario.recuperarUsuarios(nomfile);
+        
+        if (usuarios == null) {
+            return null;
+        }
+        
         for (Usuario u: usuarios){
             if (correo.equals(u.getCorreo()))
                 return u;
@@ -116,9 +124,9 @@ public class Usuario implements Serializable{
     public static ArrayList<Usuario> recuperarUsuarios (String nomArchivo){
         try (FileInputStream fin = new FileInputStream(nomArchivo);ObjectInputStream oin = new ObjectInputStream(fin);) {
             ArrayList<Usuario> usuarios = (ArrayList<Usuario>) oin.readObject();
-        return usuarios;
+            return usuarios;
         }catch(IOException e) {
-            System.out.println(e.getMessage());
+            
         } catch (ClassNotFoundException ex) {
             ex.printStackTrace();
         }
@@ -163,7 +171,12 @@ public class Usuario implements Serializable{
     
     public static boolean validarUsuario(String correo, String clave,String nomfile) throws NoSuchAlgorithmException{
         String hashclave = GFG.toHexString(GFG.getSHA(clave));
+        
         ArrayList<Usuario> usuarios = Usuario.recuperarUsuarios(nomfile);
+        
+        if (usuarios == null) {
+            return false;
+        }
         for (Usuario u : usuarios){
             if (u.getCorreo().equals(correo) && u.getClave().equals(hashclave))
                 return true;
@@ -181,6 +194,9 @@ public class Usuario implements Serializable{
     //valida que el correo sea unico
     public static boolean correoExistente(String correo,String nomfile){
         ArrayList<String> correos = recuperarCorreos(nomfile);
+        if (correos == null) {
+            return false;
+        }
         return correos.contains(correo);
     }
     

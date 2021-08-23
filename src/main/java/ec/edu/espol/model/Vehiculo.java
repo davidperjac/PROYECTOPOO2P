@@ -5,9 +5,15 @@
  */
 package ec.edu.espol.model;
 
+import ec.edu.espol.exceptions.AtributosException;
+import ec.edu.espol.exceptions.PlacaException;
 import ec.edu.espol.util.Util;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 import java.util.Objects;
@@ -34,15 +40,15 @@ public class Vehiculo {
     private String vidrios;  
     private String transmision;
     private String traccion; 
-    private int id_vendedor;
+    private String correo_vendedor;
     private Vendedor vendedor;
     private ArrayList<Oferta> ofertas;
     
     // Constructor de Autos
  
-    public Vehiculo(String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
+    public Vehiculo(String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
         this.tipo = tipo;
-        this.id_vendedor = id_vendedor;
+        this.correo_vendedor = correo_vendedor;
         this.placa = placa;
         this.marca = marca;
         this.motor = motor;
@@ -59,9 +65,9 @@ public class Vehiculo {
     
     // Constructor de Camionetas
     
-    public Vehiculo(String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
+    public Vehiculo(String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
         this.tipo = tipo;
-        this.id_vendedor = id_vendedor;
+        this.correo_vendedor = correo_vendedor;
         this.placa = placa;
         this.marca = marca;
         this.motor = motor;
@@ -79,9 +85,9 @@ public class Vehiculo {
     
     // Constructor de motos
     
-    public Vehiculo( String tipo, int id_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
+    public Vehiculo( String tipo,String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
         this.tipo = tipo;
-        this.id_vendedor = id_vendedor;
+        this.correo_vendedor = correo_vendedor;
         this.placa = placa;
         this.marca = marca;
         this.motor = motor;
@@ -208,14 +214,14 @@ public class Vehiculo {
         this.ofertas = ofertas;
     }
 
-    public int getId_vendedor() {
-        return id_vendedor;
+    public String getCorreo_vendedor() {
+        return correo_vendedor;
     }
 
-    public void setId_vendedor(int id_vendedor) {
-        this.id_vendedor = id_vendedor;
+    public void setCorreo_vendedor(String correo_vendedor) {
+        this.correo_vendedor = correo_vendedor;
     }
-
+    
     public Vendedor getVendedor() {
         return vendedor;
     }
@@ -224,76 +230,11 @@ public class Vehiculo {
         this.vendedor = vendedor;
     }
     
-    /* 
-    Metodo para  permitirle al vendedor revisar ofertas del vehiculo;
-    Puede avanzar o retroceder de oferta
-    Puede aceptar la oferta
-    Puede salir 
-    */
     
     //comportamientos
     
     //funciones de oferta
-    
-    public Oferta menuOfertas(Scanner sc){
-        System.out.println(this.marca + ' '+ this.modelo+ " Precio: $"+this.precio+"\n");
-        if(!this.ofertas.isEmpty()){
-            System.out.println("Se ha(n) realizado " + this.ofertas.size()+" oferta(s).");
-            System.out.println(" -------------------------------------------------------------------------------- ");
-            int i = 0;
-            int opcion = 1;
-            
-            while(opcion >= 1 && opcion < 4){
 
-                if (i==0) {
-                    System.out.println("OFERTA #" + (i+1) + "\n" + this.ofertas.get(i)+"\n");
-                    System.out.println("1. Siguiente Oferta\n2. Aceptar Oferta\n3. Salir"+"\n");
-                    opcion = sc.nextInt();
-                    System.out.println(" -------------------------------------------------------------------------------- ");
-                    if(opcion == 1){
-                        if(i == (this.ofertas.size() - 1))
-                            i = 0;
-                        else
-                            i += 1;       
-                    }   
-                    else if(opcion == 2){
-                        //Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
-                        opcion = 4;
-                        return this.ofertas.get(i);
-                    }
-                    
-                }else if (i > 0){
-                    System.out.println("Oferta " + (i+1) + "\n" + this.ofertas.get(i)+"\n");
-                    System.out.println("1 : Siguiente Oferta\n2 : Anterior Oferta\n3 : Aceptar Oferta\n4 : Salir"+"\n");
-                    opcion = sc.nextInt();
-                    System.out.println(" -------------------------------------------------------------------------------- ");
-                    if(opcion == 1){
-                        if(i == (this.ofertas.size() - 1))
-                            i = 0;
-                        else
-                            i += 1;       
-                        }   
-                    else if(opcion == 2){
-                        if(i == 0)
-                            i = this.ofertas.size() - 1;
-                        else
-                            i -= 1;
-                    }
-                    else if(opcion == 3){
-                        //Util.removerLinea("ofertas.txt", this.ofertas.get(i).getId_Vehiculo(), 2);
-                        opcion = 4;
-                        return this.ofertas.get(i);
-                    }
-                }
-            }
-        }
-        else{
-            System.out.println("No hay ofertas para este vehiculo"+"\n");
-            System.out.println(" -------------------------------------------------------------------------------- ");
-        }
-        return null;
-    }
-    
     /*
     agregarVehiculos(arreglo de strings con atributos de vehiculos, lista de vehiculos)
     Filtra por tipo de Vehiculo, crea una intancia de Vehiculo y lo añade a una lista de Vehiculos
@@ -302,94 +243,45 @@ public class Vehiculo {
     
     //funciones de nextvehiculo
     
-    public static void agregarVehiculos(String[] tokens, ArrayList<Vehiculo> vehiculos){
-        if(tokens[1].equals("CARRO")){
-            Vehiculo v = new Vehiculo(Integer.parseInt(tokens[0]), tokens[1], Integer.parseInt(tokens[2]), tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), tokens[7], Double.parseDouble(tokens[8]), tokens[9], tokens[10], Double.parseDouble(tokens[11]), tokens[12], tokens[13]);
-            vehiculos.add(v);
+    
+    public static Vehiculo nextCarro(String nomArchivo, String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision ) throws AtributosException, PlacaException {
+
+        
+        if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo)) || (!Util.isAlpha(vidrios)) || (!Util.isAlpha(transmision))) {
+           throw new AtributosException("ERROR! Ingrese valores no numericos");
         }
-        else if(tokens[1].equals("MOTO")){
-            Vehiculo v = new Vehiculo(Integer.parseInt(tokens[0]), tokens[1], Integer.parseInt(tokens[2]), tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), tokens[7], Double.parseDouble(tokens[8]), tokens[9], tokens[10], Double.parseDouble(tokens[11]));
-            vehiculos.add(v);
-        }
-        else if(tokens[1].equals("CAMIONETA")){
-            Vehiculo v = new Vehiculo(Integer.parseInt(tokens[0]), tokens[1], Integer.parseInt(tokens[2]), tokens[3], tokens[4], tokens[5], Integer.parseInt(tokens[6]), tokens[7], Double.parseDouble(tokens[8]), tokens[9], tokens[10], Double.parseDouble(tokens[11]), tokens[12], tokens[13], tokens[14]);
-            vehiculos.add(v);
-        }
+       
+        Vehiculo vehiculo = new Vehiculo("CARRO", correo_vendedor,Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision );
+        return vehiculo;
+
     }
     
-    public static void nextVehiculo(Scanner sc, String nomfile, String tipo, int id_vendedor) {
-        if(tipo.equals("CARRO")){
-            String[] atributos = validarCarro(sc).split(",");
-            int id = Util.nextID(nomfile);
-            Vehiculo vehiculo = new Vehiculo(id, tipo, id_vendedor, atributos[0], atributos[1], atributos[2], Integer.parseInt(atributos[3]), atributos[4], Double.parseDouble(atributos[5]), atributos[6], atributos[7], Double.parseDouble(atributos[8]), atributos[9], atributos[10]);
-            vehiculo.saveFile(nomfile);  
+    public static Vehiculo nextCamioneta(String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion ) throws AtributosException, PlacaException {
+
+        
+        if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo)) || (!Util.isAlpha(vidrios)) || (!Util.isAlpha(transmision))  ) {
+           throw new AtributosException("ERROR! Ingrese valores no numericos");
         }
-        else if(tipo.equals("CAMIONETA")){
-            String[] atributos = validarCamioneta(sc).split(",");
-            int id = Util.nextID(nomfile);
-            Vehiculo vehiculo = new Vehiculo(id, tipo, id_vendedor, atributos[0], atributos[1], atributos[2], Integer.parseInt(atributos[3]), atributos[4], Double.parseDouble(atributos[5]), atributos[6], atributos[7], Double.parseDouble(atributos[8]), atributos[9], atributos[10], atributos[11]);
-            vehiculo.saveFile(nomfile);  
+       
+        Vehiculo vehiculo = new Vehiculo("CAMIONETA", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision,traccion );
+        return vehiculo;
+
+    }
+    
+    public static Vehiculo nextMoto(String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio) throws AtributosException, PlacaException {
+
+        
+        if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo))) {
+           throw new AtributosException("ERROR! Ingrese valores no numericos");
         }
-        else if(tipo.equals("MOTO")){
-            String[] atributos = validarAtributos(sc).split(",");
-            int id = Util.nextID(nomfile);
-            Vehiculo vehiculo = new Vehiculo(id, tipo, id_vendedor, atributos[0], atributos[1], atributos[2], Integer.parseInt(atributos[3]), atributos[4], Double.parseDouble(atributos[5]), atributos[6], atributos[7], Double.parseDouble(atributos[8]));
-            vehiculo.saveFile(nomfile);  
-        }  
+       
+        Vehiculo vehiculo = new Vehiculo("MOTOO", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio);
+        return vehiculo;
+
     }
     
     //validaciones
     
-    public static String validarCarro(Scanner sc){      
-        String atributos = Vehiculo.validarAtributos(sc);             
-        System.out.println("Ingrese el tipo de vidrio del vehiculo: ");
-        String vidrios = sc.next().toUpperCase();    
-        System.out.println("Ingrese la transmision del vehiculo: ");
-        String transmision = sc.next().toUpperCase();     
-        return atributos + "," + vidrios + "," + transmision;
-    }
-
-    public static String validarCamioneta(Scanner sc){
-        String atributos = Vehiculo.validarAtributos(sc);
-        System.out.println("Ingrese el tipo de vidrio del vehiculo: ");
-        String vidrios = sc.next().toUpperCase();    
-        System.out.println("Ingrese la transmision del vehiculo: ");
-        String transmision = sc.next().toUpperCase();
-        System.out.println("Ingrese el tipo de traccion del vehiculo: ");
-        String traccion = sc.next().toUpperCase();
-        return atributos + "," + vidrios + "," + transmision + "," + traccion;
-    }
-    
-    public static String validarAtributos(Scanner sc){
-        System.out.println("Ingrese la placa del vehiculo: ");
-        String placa = Vehiculo.recuperarPlaca(sc.next(), sc);          
-        System.out.println("Ingrese la marca del vehiculo: ");
-        String marca = sc.next().toUpperCase();             
-        System.out.println("Ingrese el modelo del vehiculo: ");
-        String modelo = sc.next().toUpperCase();                 
-        System.out.println("Ingrese el tipo de motor del vehiculo: ");
-        String motor = sc.next().toUpperCase();       
-        System.out.println("Ingrese el año del vehiculo: ");
-        int anio = sc.nextInt();
-        double recorrido;
-        do{
-        System.out.println("Ingrese el recorrido que tiene el vehiculo: ");
-        recorrido = sc.nextInt();
-        }while (recorrido < 0);
-        System.out.println("Ingrese el color del vehiculo: ");
-        String color = sc.next().toUpperCase();
-        String combustible;
-        do{
-        System.out.println("Ingrese el tipo de combustible del vehiculo (SUPER, EXTRA, ECOPAIS, DIESEL): ");
-        combustible = sc.next().toUpperCase();        
-        }while( ( !combustible.equals("SUPER")  ) && ( !combustible.equals("EXTRA") ) && ( !combustible.equals("ECOPAIS")) && ( !combustible.equals("DIESEL")));
-        int precio;
-        do{
-        System.out.println("Ingrese el precio del vehiculo: ");
-        precio = sc.nextInt();      
-        }while (precio < 0 );
-        return placa + "," + marca + "," + motor + "," + anio + "," + modelo + "," + recorrido + "," + color + "," + combustible + "," + precio;
-    }
     
     public static boolean validarPlaca(String placa){
         String regex = "^[A-Z][A-Z][A-Z]-[0-9]{3,4}";
@@ -398,26 +290,32 @@ public class Vehiculo {
         return matcher.matches();
     }
     
-    
     //funciones de file
     
-    public void saveFile(String nomfile) {
-
+    public static ArrayList<Vehiculo> recuperarVehiculos(String nomArchivo) {
+        try (FileInputStream fin = new FileInputStream(nomArchivo);ObjectInputStream oin = new ObjectInputStream(fin);) {
+            ArrayList<Vehiculo> vehiculos = (ArrayList<Vehiculo>) oin.readObject();
+        return vehiculos;
+        }catch(IOException e) {
+            System.out.println(e.getMessage());
+        } catch (ClassNotFoundException ex) {
+            ex.printStackTrace();
+        }
+        return null; 
+    }
+    
+    public void guardarVehiculos(String nomArchivo, ArrayList<Vehiculo> vehiculos) {
+        try(FileOutputStream fous = new FileOutputStream (nomArchivo);ObjectOutputStream out = new ObjectOutputStream (fous);){
+            out.writeObject(vehiculos);
+            out.flush();
+        }catch(IOException e) {
+            System.out.println(e.getMessage());
+        }
         
     } 
-    
-    public static ArrayList<Vehiculo> readFile(String nomfile) {
 
-    }
-    
-
-    // Borra el vehiculo de la base de datos
-    public void borrarVehiculo(){
-        Util.removerLinea("vehiculos.txt", this.id,0);
-    }
-    
     //funciones link
-    
+    /*
     public static ArrayList<Vehiculo> linkVehiculo(String nomFile, int id_vendedor){
         ArrayList<Vehiculo> vehiculos = readFile(nomFile);
         ArrayList<Vehiculo> vehiculos2 = new ArrayList<>();
@@ -433,8 +331,7 @@ public class Vehiculo {
         for(Vehiculo v : vehiculos){
             Vendedor vend = Vendedor.searchByID(vendedores, v.getId_vendedor());
             v.setVendedor(vend);
-            vend.getVehiculos().add(v);
-            
+            vend.getVehiculos().add(v);           
         }
     }
     
@@ -450,25 +347,23 @@ public class Vehiculo {
 
         }
     }
+    */
+    
     //funcion recuperar
     
-    public static String recuperarPlaca(String placa,Scanner sc) {
+    public static String recuperarPlaca(String placa,String nomArchivo) throws PlacaException {
         
-        boolean placaVal = Vehiculo.validarPlaca(placa);
-        boolean placaExis = Vehiculo.searchByPlaca(Vehiculo.readFile("vehiculos.txt"), placa) != null;
-        while(!placaVal|| placaExis){
-            if(!placaVal)
-                System.out.println("ERROR! Ingrese una placa valida"+"\n");
-            else if (placaExis){
-                System.out.println("Este vehiculo ya esta registrado en el sistema! Por favor ingrese de nuevo"+"\n");
-            }
-            placa = sc.next();
-            placaVal = Vehiculo.validarPlaca(placa);
-            placaExis = Vehiculo.searchByPlaca(Vehiculo.readFile("vehiculos.txt"), placa) != null;
+        boolean formatoPlaca = Vehiculo.validarPlaca(placa);
+        ArrayList<Vehiculo> vehiculos = Vehiculo.recuperarVehiculos(nomArchivo);
+        
+        Vehiculo vehiculoExis = Vehiculo.searchByPlaca(vehiculos, placa);
+        
+        if(!formatoPlaca)
+            throw new PlacaException ("ERROR! Esta placa no es valida");
+        else if (vehiculoExis.getPlaca() != null ){
+            throw new PlacaException ("ERROR! Esta placa ya existe en el sistema");
         }
-        
         return placa;
-        
     }
     
     //funciones searchby

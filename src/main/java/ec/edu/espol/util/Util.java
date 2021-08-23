@@ -69,30 +69,7 @@ public class Util {
         return id+1;
     }
     */
-    public static void removerLinea(String nomFile, int id, int num){
-        File oldFile = new File(nomFile);
-        File newFile = new File("temp.txt");
-        try{
-            PrintWriter pw = new PrintWriter(new FileOutputStream(newFile), true);
-            Scanner sc = new Scanner(oldFile); 
-            while(sc.hasNextLine()){
-                String line = sc.nextLine();
-                String[] tokens = line.split("\\|");
-                if(Integer.parseInt(tokens[num]) != id){
-                    pw.println(String.join("|", tokens));
-                }
-            }
-            sc.close();
-            pw.flush();
-            pw.close();
-            oldFile.delete();
-            File dump = new File(nomFile);
-            newFile.renameTo(dump);
-        }
-        catch(Exception e){
-            System.out.println(e.getMessage());
-        }
-    }
+
 }
 
 

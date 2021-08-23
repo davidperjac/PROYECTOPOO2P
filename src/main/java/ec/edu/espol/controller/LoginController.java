@@ -44,28 +44,47 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        this.compradores = Usuario.recuperarUsuarios("compradores.txt");
-        this.vendedores = Usuario.recuperarUsuarios("vendedores.txt");
+        if (Usuario.recuperarUsuarios("compradores.ser") == null) {
+            this.compradores = new ArrayList<Usuario>();
+        }else {
+            this.compradores = Usuario.recuperarUsuarios("compradores.ser");
+        }
+        
+        if (Usuario.recuperarUsuarios("vendedores.ser") == null) {
+            this.vendedores = new ArrayList<Usuario>();
+        }else {
+            this.vendedores = Usuario.recuperarUsuarios("vendedores.ser");
+        }
     }    
 
     @FXML
     private void login(MouseEvent event) {
         try {
-            if(!Usuario.validarUsuario(correo.getText(),contraseña.getText(), "compradores.txt"))
-                throw new CorreoException("ERROR! Este correo no esta registrado");
-            else {
-                FXMLLoader fxmlloader;
-                try {
-                    fxmlloader = App.loadFXMLLoader("menu");
-                    App.setRoot(fxmlloader);
-                    //HorarioController hc = fxmlloader.getController();
-                    //hc.setLabels(titulo, sinopsis);
-                } catch (IOException ex) {
-                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
-                    a.show();
-                }
-            }
+            Usuario comp = Usuario.recuperarUsuario(correo.getText(), "compradores.ser");
+            Usuario vend = Usuario.recuperarUsuario(correo.getText(), "vendedores.ser");
             
+            if (comp != null || vend != null) {
+                
+                if(!Usuario.validarUsuario(correo.getText(),contraseña.getText(), "compradores.ser") && !Usuario.validarUsuario(correo.getText(),contraseña.getText(), "vendedores.ser"))
+                    throw new CorreoException("ERROR! Contraseña equivocada");
+                else {
+                    FXMLLoader fxmlloader;
+                    try {
+                        fxmlloader = App.loadFXMLLoader("menu");
+                        App.setRoot(fxmlloader);
+                        MenuController mc = fxmlloader.getController();
+                        mc.setCorreo(correo.getText());
+
+                    } catch (IOException ex) {
+                        Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                        a.show();
+                    }
+                }
+               
+            }else {
+                throw new CorreoException("ERROR! Este correo no esta registrado");
+            }
+
         } catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         } catch (CorreoException ex) {

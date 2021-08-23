@@ -164,49 +164,16 @@ public class Comprador extends Usuario{
         return filtroVehiculos;
     }   
     
-    public void ponerOferta(Vehiculo v, String nomfile, Scanner sc){
-        sc.useDelimiter("\n");
-        System.out.println("NUEVA OFERTA");
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        System.out.println("Vehículo a ofertar:\n"+ v);
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        System.out.println("Ingrese su oferta: "+"\n");
-        Double oferta = sc.nextDouble();
-        while(oferta<=0){
-            System.out.println("Ingrese una oferta válida."+"\n");
-            oferta = sc.nextDouble();
-        }
-        System.out.println(" -------------------------------------------------------------------------------- ");
-        int opcion;
-        do{
-            System.out.println("Confirmar una oferta de $" + oferta+"\n");
-            System.out.println("1.- Confirmar");
-            System.out.println("2.- Cancelar");
-            opcion = sc.nextInt();
-            System.out.println(" -------------------------------------------------------------------------------- ");
-        }
-        while(opcion != 1 && opcion != 2);
-        if (opcion ==1){
-            Oferta o = new Oferta(v.getPlaca(), oferta, this.correo);
-            o.saveFile(nomfile);
-            System.out.println("La oferta ha sido puesta exitosamente");
-            System.out.println(" -------------------------------------------------------------------------------- ");
-        }else {
-            System.out.println("No se ha puesto ninguna oferta");
-            System.out.println(" -------------------------------------------------------------------------------- ");
-        }
-       
-    }
     
     //extras
     
     
-    public static Comprador inicioSesionC(String correo, String clave) throws NoSuchAlgorithmException, UsuarioException{
+    public static Comprador inicioSesionC(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
         
-        if (!Usuario.validarUsuario(correo,clave,"compradores.txt")) 
+        if (!Usuario.validarUsuario(correo,clave, nomfile)) 
             throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
         
-        Comprador comp = new Comprador(Usuario.recuperarUsuario(correo, "compradores.txt"));
+        Comprador comp = new Comprador(Usuario.recuperarUsuario(correo,nomfile));
         return comp;
     }
     
