@@ -24,7 +24,7 @@ public class Oferta implements Serializable{
     private String placa_vehiculo;
     private double precio_ofertado;
     private Vehiculo vehiculo;
-    private Comprador comprador;
+    private Usuario comprador;
     private String correo_comprador;
     
     //constructor
@@ -45,7 +45,7 @@ public class Oferta implements Serializable{
         return vehiculo;
     }
 
-    public Comprador getComprador() {
+    public Usuario getComprador() {
         return comprador;
     }
 
@@ -61,7 +61,7 @@ public class Oferta implements Serializable{
         this.vehiculo = vehiculo;
     }
 
-    public void setComprador(Comprador comprador) {
+    public void setComprador(Usuario comprador) {
         this.comprador = comprador;
     }
 

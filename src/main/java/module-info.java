@@ -8,4 +8,5 @@ module ec.edu.espol.proyecto2p {
     exports ec.edu.espol.proyecto2p;
     exports ec.edu.espol.controller;
     requires java.mail;
+    requires org.apache.commons.codec;
 }

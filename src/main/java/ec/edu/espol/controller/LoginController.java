@@ -28,8 +28,7 @@ import javafx.scene.input.MouseEvent;
  * @author davidperez
  */
 public class LoginController implements Initializable {
-    ArrayList<Usuario> compradores;
-    ArrayList<Usuario> vendedores;
+    ArrayList<Usuario> usuarios;
     @FXML
     private Button loginbtn;
     @FXML
@@ -44,28 +43,21 @@ public class LoginController implements Initializable {
      */
     @Override
     public void initialize(URL url, ResourceBundle rb) {
-        if (Usuario.recuperarUsuarios("compradores.ser") == null) {
-            this.compradores = new ArrayList<Usuario>();
+        if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
+            this.usuarios = new ArrayList<Usuario>();
         }else {
-            this.compradores = Usuario.recuperarUsuarios("compradores.ser");
-        }
-        
-        if (Usuario.recuperarUsuarios("vendedores.ser") == null) {
-            this.vendedores = new ArrayList<Usuario>();
-        }else {
-            this.vendedores = Usuario.recuperarUsuarios("vendedores.ser");
+            this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");
         }
     }    
 
     @FXML
     private void login(MouseEvent event) {
         try {
-            Usuario comp = Usuario.recuperarUsuario(correo.getText(), "compradores.ser");
-            Usuario vend = Usuario.recuperarUsuario(correo.getText(), "vendedores.ser");
+            Usuario user = Usuario.recuperarUsuario(correo.getText(), "usuarios.ser");
             
-            if (comp != null || vend != null) {
+            if (user != null) {
                 
-                if(!Usuario.validarUsuario(correo.getText(),contraseña.getText(), "compradores.ser") && !Usuario.validarUsuario(correo.getText(),contraseña.getText(), "vendedores.ser"))
+                if(!Usuario.validarUsuario(correo.getText(),contraseña.getText(), "usuarios.ser"))
                     throw new CorreoException("ERROR! Contraseña equivocada");
                 else {
                     FXMLLoader fxmlloader;
@@ -73,7 +65,7 @@ public class LoginController implements Initializable {
                         fxmlloader = App.loadFXMLLoader("menu");
                         App.setRoot(fxmlloader);
                         MenuController mc = fxmlloader.getController();
-                        mc.setCorreo(correo.getText());
+                        mc.setCorreo(correo.getText(),contraseña.getText());
 
                     } catch (IOException ex) {
                         Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
@@ -81,6 +73,8 @@ public class LoginController implements Initializable {
                     }
                 }
                
+            }else if (!Usuario.validarCorreo(correo.getText())) {
+                throw new CorreoException ("ERROR! Ingrese un formato de correo valido");
             }else {
                 throw new CorreoException("ERROR! Este correo no esta registrado");
             }

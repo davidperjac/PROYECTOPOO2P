@@ -1,13 +1,12 @@
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/RegisterController.java
+/Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/MiCuentaController.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/MenuController.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Usuario.java
-/Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Vendedor.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/util/GFG.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/UsuarioException.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/ContraseñaException.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Vehiculo.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Oferta.java
-/Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Comprador.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/LoginController.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/util/Util.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/CorreoException.java

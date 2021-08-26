@@ -17,6 +17,7 @@ import javafx.fxml.Initializable;
 import javafx.geometry.Pos;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Text;
@@ -27,9 +28,9 @@ import javafx.scene.text.Text;
  * @author davidperez
  */
 public class MenuController implements Initializable {
-    ArrayList<Usuario> compradores;
-    ArrayList<Usuario> vendedores;
+    ArrayList<Usuario> usuarios;
     private String correo;
+    private String contraseña;
     @FXML
     private Button cerrarsesionbtn;
     @FXML
@@ -40,6 +41,8 @@ public class MenuController implements Initializable {
     private VBox botonesvbx;
     @FXML
     private Button menubtn;
+    @FXML
+    private Text lblrol;
 
     /**
      * Initializes the controller class.
@@ -47,22 +50,17 @@ public class MenuController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        if (Usuario.recuperarUsuarios("compradores.ser") == null) {
-            this.compradores = new ArrayList<Usuario>();
+        if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
+            this.usuarios = new ArrayList<Usuario>();
         }else {
-            this.compradores = Usuario.recuperarUsuarios("compradores.ser");
+            this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");
         }
-        
-        if (Usuario.recuperarUsuarios("vendedores.ser") == null) {
-            this.vendedores = new ArrayList<Usuario>();
-        }else {
-            this.vendedores = Usuario.recuperarUsuarios("vendedores.ser");
-        }        
     }    
 
     
-    public void setCorreo(String correo) {
+    public void setCorreo(String correo, String contraseña) {
         this.correo = correo;
+        this.contraseña = contraseña;
         lblbienvenida.setText("Bienvenido "+correo);
     }
    
@@ -79,34 +77,56 @@ public class MenuController implements Initializable {
 
     @FXML
     private void configurarCuenta(MouseEvent event) {
+        FXMLLoader fxmlloader; 
+        try {
+            fxmlloader = App.loadFXMLLoader("miCuenta");
+            App.setRoot(fxmlloader);
+            MiCuentaController mic = fxmlloader.getController();
+            mic.setCuenta(correo,contraseña);
+            
+         } catch (IOException ex) {
+             System.out.println(ex);
+             Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+             a.show();
+         }
+        
     }
 
     @FXML
     private void abrirMenu(MouseEvent event) {
         botonesvbx.getChildren().clear();
         botonesvbx.setAlignment(Pos.CENTER);
-        botonesvbx.setSpacing(15);      
+        botonesvbx.setSpacing(15);
         
-        for (Usuario v : this.vendedores) {
-            if (v.getCorreo().equals(correo)) {
+        Usuario u = Usuario.recuperarUsuario(correo, "usuarios.ser");
+        lblrol.setText("ROL : "+u.getRol());
+        if (u.getRol().equals("Vendedor")) {
+            
+            Button registrarbtn = new Button("Registrar Vehiculo");
+            Button aceptarOfbtn = new Button("Aceptar Ofertas");
 
-                //registrar un vehiculo
-                //aceptar ofertas 
-                Button registrarbtn = new Button("Registrar Vehiculo");
-                Button aceptarOfbtn = new Button("Aceptar Ofertas");
-                
-                botonesvbx.getChildren().add(registrarbtn);
-                botonesvbx.getChildren().add(aceptarOfbtn);
-                
-            }
-        }
-        for (Usuario c : this.compradores) {
-            if (c.getCorreo().equals(correo)) {
+            botonesvbx.getChildren().add(registrarbtn);
+            botonesvbx.getChildren().add(aceptarOfbtn);
+            
+            
+        }else if (u.getRol().equals("Comprador")) {
+        
+            Button ofertarbtn = new Button("Ofertar por un vehiculo");
+            botonesvbx.getChildren().add(ofertarbtn);
+        
+        }else if (u.getRol().equals("Ambos")) {
+            
+            //registrar un vehiculo
+            //aceptar ofertas 
+            Button registrarbtn = new Button("Registrar Vehiculo");
+            Button aceptarOfbtn = new Button("Aceptar Ofertas");
 
-                //oferta por un vehiculo
-                Button ofertarbtn = new Button("Ofertar por un vehiculo");
-                botonesvbx.getChildren().add(ofertarbtn);
-            }
+            botonesvbx.getChildren().add(registrarbtn);
+            botonesvbx.getChildren().add(aceptarOfbtn);
+            
+            //oferta por un vehiculo
+            Button ofertarbtn = new Button("Ofertar por un vehiculo");
+            botonesvbx.getChildren().add(ofertarbtn); 
         }
     }
     

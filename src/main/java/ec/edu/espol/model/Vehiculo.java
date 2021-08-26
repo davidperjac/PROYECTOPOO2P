@@ -41,7 +41,7 @@ public class Vehiculo {
     private String transmision;
     private String traccion; 
     private String correo_vendedor;
-    private Vendedor vendedor;
+    private Usuario vendedor;
     private ArrayList<Oferta> ofertas;
     
     // Constructor de Autos
@@ -222,11 +222,11 @@ public class Vehiculo {
         this.correo_vendedor = correo_vendedor;
     }
     
-    public Vendedor getVendedor() {
+    public Usuario getVendedor() {
         return vendedor;
     }
 
-    public void setVendedor(Vendedor vendedor) {
+    public void setVendedor(Usuario vendedor) {
         this.vendedor = vendedor;
     }
     

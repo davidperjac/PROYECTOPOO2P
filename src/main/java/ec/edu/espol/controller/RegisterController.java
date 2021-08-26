@@ -7,7 +7,6 @@ package ec.edu.espol.controller;
 
 import ec.edu.espol.exceptions.ContraseñaException;
 import ec.edu.espol.exceptions.CorreoException;
-import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Usuario;
 import ec.edu.espol.proyecto2p.App;
 import java.io.IOException;
@@ -34,8 +33,7 @@ import javafx.scene.input.MouseEvent;
  * @author davidperez
  */
 public class RegisterController implements Initializable {
-    ArrayList<Usuario> compradores;
-    ArrayList<Usuario> vendedores;
+    ArrayList<Usuario> usuarios;
     String rol;
     @FXML
     private Button registratebtn;
@@ -62,16 +60,10 @@ public class RegisterController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
-        if (Usuario.recuperarUsuarios("compradores.ser") == null) {
-            this.compradores = new ArrayList<Usuario>();
+        if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
+            this.usuarios = new ArrayList<Usuario>();
         }else {
-            this.compradores = Usuario.recuperarUsuarios("compradores.ser");
-        }
-        
-        if (Usuario.recuperarUsuarios("vendedores.ser") == null) {
-            this.vendedores = new ArrayList<Usuario>();
-        }else {
-            this.vendedores = Usuario.recuperarUsuarios("vendedores.ser");
+            this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");
         }
         
         ArrayList<String> roles = new ArrayList<String>();
@@ -93,17 +85,10 @@ public class RegisterController implements Initializable {
                     throw new ContraseñaException("ERROR! Las contraseñas no son iguales");
                 }
 
-                if(rol.equals("Vendedor")){
-                    Usuario u = Usuario.nextUsuario("vendedores.ser",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
-                    this.vendedores.add(u);
-                    Usuario.guardarUsuarios("vendedores.ser", vendedores);
-                }else if(rol.equals("Comprador")){
-                    Usuario u = Usuario.nextUsuario("compradores.ser",correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
-                    this.vendedores.add(u);
-                    Usuario.guardarUsuarios("comporadores.ser",compradores);
-                }else if (rol.equals("Ambos")) {
-                    System.out.println("");
-                }
+                Usuario u = Usuario.nextUsuario("usuarios.ser",rol,correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
+                this.usuarios.add(u);
+                Usuario.guardarUsuarios("usuarios.ser", usuarios);
+
                  Alert a = new Alert(Alert.AlertType.INFORMATION,"Se ha agregado su usuario exitosamente");
                  a.show();
             }

@@ -6,6 +6,7 @@
 package ec.edu.espol.model;
 
 import ec.edu.espol.exceptions.CorreoException;
+import ec.edu.espol.exceptions.UsuarioException;
 import ec.edu.espol.util.GFG;
 import ec.edu.espol.util.Util;
 import java.io.File;
@@ -19,9 +20,16 @@ import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.InputMismatchException;
+import java.util.Locale;
+import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import javax.mail.Message;
+import javax.mail.Session;
+import javax.mail.Transport;
+import javax.mail.internet.InternetAddress;
+import javax.mail.internet.MimeMessage;
 
 
 /**
@@ -29,22 +37,28 @@ import java.util.regex.Pattern;
  * @author davidperez
  */
 public class Usuario implements Serializable{
+    private String rol;
     protected String correo;
     protected String clave;
     protected String nombres;
     protected String apellidos;
     protected String organizacion;
+    private ArrayList<Oferta> ofertas;
+    private ArrayList<Vehiculo> vehiculos;
     
     //constructor
     
-    public Usuario(String correo, String clave, String nombres, String apellidos, String organizacion){
+    public Usuario(String rol, String correo, String clave, String nombres, String apellidos, String organizacion){
+        this.rol = rol;
         this.correo = correo;
         this.clave = clave;
         this.nombres = nombres;
         this.apellidos = apellidos;
         this.organizacion = organizacion;
+        this.ofertas = new ArrayList<Oferta>();
+        this.vehiculos = new ArrayList<Vehiculo>();       
     }
-    
+
     //getters y setters
 
     public String getCorreo() {
@@ -86,6 +100,211 @@ public class Usuario implements Serializable{
     public void setOrganizacion(String organizacion) {
         this.organizacion = organizacion;
     }
+    //nuevo
+    public String getRol() {
+        return rol;
+    }
+
+    public void setRol(String rol) {
+        this.rol = rol;
+    }
+
+    public ArrayList<Oferta> getOfertas() {
+        return ofertas;
+    }
+
+    public void setOfertas(ArrayList<Oferta> ofertas) {
+        this.ofertas = ofertas;
+    }
+
+    public ArrayList<Vehiculo> getVehiculos() {
+        return vehiculos;
+    }
+
+    public void setVehiculos(ArrayList<Vehiculo> vehiculos) {
+        this.vehiculos = vehiculos;
+    }
+    
+    
+    
+    //funciones de vendedor
+    
+    public static void enviarCorreo(String destinatario, String marca, String modelo,String motor, double dinero, String placa) {
+
+        Properties props = new Properties();
+        
+        props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
+        props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
+        props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
+        //props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
+        
+        props.put("mail.smtp.user", "sistema.dij.poo@gmail.com");
+        props.put("mail.smtp.clave", "ProyectoPOO2P");    //La clave de la cuenta
+
+
+        Session session = Session.getDefaultInstance(props);
+        MimeMessage message = new MimeMessage(session);
+
+        try {
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
+            message.setSubject("Oferta aceptada");
+            message.setText("Un gusto le saluda el sistema de la app SDF. Se ha aceptado su oferta de $"+dinero+" por el vehiculo "+marca+" "+modelo+" "+motor+" con la placa: "+placa);
+            Transport transport = session.getTransport("smtp");
+            transport.connect("smtp.gmail.com", "sistema.dij.poo@gmail.com", "ProyectoPOO2P");
+            transport.sendMessage(message, message.getAllRecipients());
+            transport.close();
+            System.out.println("Se ha aceptado la oferta exitosamente y se ha notificado al comprador de su vehículo.");
+            System.out.println(" -------------------------------------------------------------------------------- ");
+        }
+        catch (Exception e) {
+            e.printStackTrace();   
+        }
+    }
+    
+    public static Usuario inicioSesionV(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
+        
+        if (!Usuario.validarUsuario(correo,clave,nomfile)) 
+            throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
+        
+        Usuario usuarioV = Usuario.recuperarUsuario(correo, nomfile);
+        return usuarioV;
+    }
+    
+    
+    
+    //funciones de comprador
+    
+    public static ArrayList<Vehiculo> busquedaVehiculo(Scanner sc, ArrayList<Vehiculo> vehiculos){
+        String tipo;
+        double rmin, rmax, pmin, pmax;
+        int amin, amax;
+        ArrayList<Vehiculo> filtroVehiculos;
+        sc.useDelimiter("\n");
+        sc.useLocale(Locale.US);
+        System.out.println("BÚSQUEDA DE VEHÍCULOS");
+        System.out.println(" -------------------------------------------------------------------------------- ");
+        System.out.println("NOTA: Para separar los decimales usar el punto."+"\n");
+        
+        int p1;
+        do{
+            System.out.println("¿Desea especificar el tipo de vehículo?"+"\n");
+            System.out.println("1.- Sí");
+            System.out.println("2.- No");
+            p1 = sc.nextInt();
+        }
+        while (p1 != 1 && p1 != 2);
+        if (p1 == 1){
+            System.out.println("Ingrese el tipo de vehículo a buscar (MOTO, CARRO, CAMIONETA): "+"\n");
+            tipo = sc.next().toUpperCase();
+            while (!tipo.equals("MOTO") && !tipo.equals("CAMIONETA") && !tipo.equals("CARRO")){
+                System.out.println("El tipo de vehículo no es valido, por favor ingresarlo de nuevo (MOTO, CARRO, CAMIONETA): "+"\n");
+                tipo = sc.next().toUpperCase();
+            }
+        }
+        else
+            tipo = "n";
+        
+        System.out.println(" -------------------------------------------------------------------------------- ");
+        int p2;
+        do{
+            System.out.println("¿Desea especificar el recorrido del vehículo?"+"\n");
+            System.out.println("1.- Sí");
+            System.out.println("2.- No");
+            p2 = sc.nextInt();
+        }
+        while (p2 != 1 && p2 != 2);
+        if (p2 == 1){
+            System.out.println("Recorrido mínimo del vehículo: "+"\n");
+            rmin = sc.nextDouble();
+            while (rmin < 0){
+                System.out.println("Por favor ingrese un número positivo: "+"\n");
+                rmin = sc.nextDouble();
+            }
+            System.out.println("Recorrido máximo del vehículo: "+"\n");
+            rmax = sc.nextDouble();
+            while (rmax < rmin){
+                System.out.println("Por favor ingrese un número mayor al recorrido mínimo: "+"\n");
+                rmax = sc.nextDouble();
+            }
+        }
+        else
+            rmin = rmax = -1;
+        
+        System.out.println(" -------------------------------------------------------------------------------- ");
+        int p3;
+        do{
+            System.out.println("¿Desea especificar el año del vehículo?"+"\n");
+            System.out.println("1.- Sí");
+            System.out.println("2.- No");
+            p3 = sc.nextInt();
+        }
+        while (p3 != 1 && p3 != 2);
+        if (p3 == 1){
+            System.out.println("Año más antiguo de modelo del vehículo: "+"\n");
+            amin = sc.nextInt();
+            while (amin < 1800){
+                System.out.println("Por favor ingrese un año mayor a 1856: "+"\n");
+                amin = sc.nextInt();
+            }
+            System.out.println("Año más reciente de modelo del vehículo: "+"\n");
+            amax = sc.nextInt();
+            while (amax < amin){
+                System.out.println("Por favor ingrese un año mayor al año mínimo: "+"\n");
+                amax = sc.nextInt();
+            }
+        }
+        else
+            amin =amax = -1;
+        
+        System.out.println(" -------------------------------------------------------------------------------- ");
+        int p4;
+        do{
+            System.out.println("¿Desea especificar rango de precio del vehículo?"+"\n");
+            System.out.println("1.- Sí");
+            System.out.println("2.- No");
+            p4 = sc.nextInt();
+        }
+        while (p4 != 1 && p4 != 2);
+        if (p4 == 1){
+            System.out.println("Precio mínimo del vehículo: "+"\n");
+            pmin = sc.nextDouble();
+            while (pmin < 0){
+                System.out.println("Por favor ingrese un precio positivo: "+"\n");
+                pmin = sc.nextDouble();
+            }
+            System.out.println("Precio máximo del vehículo: "+"\n");
+            pmax = sc.nextDouble();
+            while (pmax < pmin){
+                System.out.println("Por favor ingrese un precio mayor al mínimo: "+"\n");
+                pmax = sc.nextDouble();
+            }
+        }
+        else
+            pmin = pmax = -1;
+        System.out.println(" -------------------------------------------------------------------------------- ");
+        filtroVehiculos = vehiculos;
+        if (!tipo.equals("n"))
+            filtroVehiculos = Vehiculo.searchByTipo(tipo, filtroVehiculos);
+        if (rmin != -1)
+            filtroVehiculos = Vehiculo.searchByRecorrido(rmin, rmax, filtroVehiculos);
+        if (amin != -1)
+            filtroVehiculos = Vehiculo.searchByAnio(amin, amax, filtroVehiculos);
+        if (pmin != -1)
+            filtroVehiculos = Vehiculo.searchByPrecio(pmin, pmax, filtroVehiculos);
+        return filtroVehiculos;
+    }   
+    
+    
+    public static Usuario inicioSesionC(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
+        
+        if (!Usuario.validarUsuario(correo,clave, nomfile)) 
+            throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
+        
+        Usuario usuarioC = Usuario.recuperarUsuario(correo,nomfile);
+        return usuarioC;
+    }
+    
+    
     
     
     // funciones recuperadoras
@@ -145,7 +364,7 @@ public class Usuario implements Serializable{
     //comportamientos problema
 
     //constructor que valide cosas
-    public static Usuario nextUsuario(String nomfile, String correo, String clave, String nombres, String apellidos, String organizacion) throws NoSuchAlgorithmException, CorreoException, InputMismatchException{        
+    public static Usuario nextUsuario(String nomfile,String rol,String correo, String clave, String nombres, String apellidos, String organizacion) throws NoSuchAlgorithmException, CorreoException, InputMismatchException{        
         boolean corrExis;
         boolean corrValid;
         do{
@@ -154,7 +373,7 @@ public class Usuario implements Serializable{
             if (!corrValid)
                 throw new CorreoException("ERROR! Ese correo no es valido");
             else if (corrExis)
-                throw new CorreoException("ERROR! Ese correo ya existe");
+                throw new CorreoException("ERROR! Ese correo ya existe en el sistema");
         }while(!corrValid || corrExis);
         
         String hashclave = GFG.toHexString(GFG.getSHA(clave));
@@ -163,7 +382,7 @@ public class Usuario implements Serializable{
             throw new InputMismatchException();
         }
         
-        Usuario u = new Usuario(correo, hashclave, nombres, apellidos, organizacion);
+        Usuario u = new Usuario(rol,correo, hashclave, nombres, apellidos, organizacion);
         return u;
     }
 

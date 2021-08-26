@@ -4,11 +4,9 @@
  * and open the template in the editor.
  */
 package ec.edu.espol.util;
-import ec.edu.espol.model.Comprador;
 import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Usuario;
 import ec.edu.espol.model.Vehiculo;
-import ec.edu.espol.model.Vendedor;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.PrintWriter;
