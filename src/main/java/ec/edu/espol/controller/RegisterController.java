@@ -78,19 +78,20 @@ public class RegisterController implements Initializable {
     private void registrar(MouseEvent event) {
         try {
             if (rol == null || correo == null || nombres == null || apellidos == null || org == null || contraseña == null || conf_contra == null) {
-                Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Llene todos los campos obligatorios");
-                a.show();
+                throw new ContraseñaException("ERROR! Llene todos los campos obligatorios");
             }else {
+
+                Usuario u = Usuario.nextUsuario("usuarios.ser",rol,correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
+                
                 if (!contraseña.getText().equals(conf_contra.getText())) {
                     throw new ContraseñaException("ERROR! Las contraseñas no son iguales");
                 }
-
-                Usuario u = Usuario.nextUsuario("usuarios.ser",rol,correo.getText(),contraseña.getText(), nombres.getText(), apellidos.getText(), org.getText());
+                
                 this.usuarios.add(u);
                 Usuario.guardarUsuarios("usuarios.ser", usuarios);
 
-                 Alert a = new Alert(Alert.AlertType.INFORMATION,"Se ha agregado su usuario exitosamente");
-                 a.show();
+                Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Se ha agregado su usuario exitosamente");
+                a.show();
             }
   
         }catch (ContraseñaException ce) {

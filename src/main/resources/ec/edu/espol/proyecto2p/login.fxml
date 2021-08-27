@@ -34,8 +34,14 @@
           <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CORREO" GridPane.halignment="CENTER" />
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CONTRASEÑA" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CORREO" GridPane.halignment="CENTER">
+               <font>
+                  <Font name="Futura Medium" size="15.0" />
+               </font></Text>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="CONTRASEÑA" GridPane.halignment="CENTER" GridPane.rowIndex="1">
+               <font>
+                  <Font name="Futura Medium" size="15.0" />
+               </font></Text>
             <TextField fx:id="correo" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" GridPane.columnIndex="1" />
             <PasswordField fx:id="contraseña" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefWidth="180.0" GridPane.columnIndex="1" GridPane.rowIndex="1">
                <font>
@@ -46,11 +52,17 @@
                <GridPane.margin>
                   <Insets left="20.0" top="40.0" />
                </GridPane.margin>
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
             </Button>
             <Button fx:id="registerbtn" mnemonicParsing="false" onMouseClicked="#register" text="REGISTRATE" GridPane.rowIndex="2">
                <GridPane.margin>
                   <Insets left="40.0" top="40.0" />
                </GridPane.margin>
+               <font>
+                  <Font name="Futura Medium" size="14.0" />
+               </font>
             </Button>
          </children>
          <BorderPane.margin>

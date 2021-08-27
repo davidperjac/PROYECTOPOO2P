@@ -98,34 +98,32 @@ public class MenuController implements Initializable {
         botonesvbx.setAlignment(Pos.CENTER);
         botonesvbx.setSpacing(15);
         
+        Button registrarbtn = new Button("Registrar Vehiculo");
+        Button aceptarOfbtn = new Button("Aceptar Ofertas");
+        Button ofertarbtn = new Button("Ofertar por un vehiculo");
+        
         Usuario u = Usuario.recuperarUsuario(correo, "usuarios.ser");
         lblrol.setText("ROL : "+u.getRol());
         if (u.getRol().equals("Vendedor")) {
             
-            Button registrarbtn = new Button("Registrar Vehiculo");
-            Button aceptarOfbtn = new Button("Aceptar Ofertas");
-
             botonesvbx.getChildren().add(registrarbtn);
             botonesvbx.getChildren().add(aceptarOfbtn);
             
             
         }else if (u.getRol().equals("Comprador")) {
         
-            Button ofertarbtn = new Button("Ofertar por un vehiculo");
+            
             botonesvbx.getChildren().add(ofertarbtn);
         
         }else if (u.getRol().equals("Ambos")) {
             
             //registrar un vehiculo
             //aceptar ofertas 
-            Button registrarbtn = new Button("Registrar Vehiculo");
-            Button aceptarOfbtn = new Button("Aceptar Ofertas");
 
             botonesvbx.getChildren().add(registrarbtn);
             botonesvbx.getChildren().add(aceptarOfbtn);
             
             //oferta por un vehiculo
-            Button ofertarbtn = new Button("Ofertar por un vehiculo");
             botonesvbx.getChildren().add(ofertarbtn); 
         }
     }

@@ -12,6 +12,7 @@ import java.io.IOException;
 import java.net.URL;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -73,13 +74,15 @@ public class LoginController implements Initializable {
                     }
                 }
                
+            }else if (correo.getText().equals("") || contraseña.getText().equals("") ) {
+                throw new CorreoException ("ERROR! Llene todos los campos");
             }else if (!Usuario.validarCorreo(correo.getText())) {
                 throw new CorreoException ("ERROR! Ingrese un formato de correo valido");
             }else {
                 throw new CorreoException("ERROR! Este correo no esta registrado");
             }
 
-        } catch (NoSuchAlgorithmException ex) {
+        }catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();
         } catch (CorreoException ex) {
             Alert a = new Alert(Alert.AlertType.ERROR,ex.getMessage());

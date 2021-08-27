@@ -38,11 +38,11 @@ import javax.mail.internet.MimeMessage;
  */
 public class Usuario implements Serializable{
     private String rol;
-    protected String correo;
-    protected String clave;
-    protected String nombres;
-    protected String apellidos;
-    protected String organizacion;
+    private String correo;
+    private String clave;
+    private String nombres;
+    private String apellidos;
+    private String organizacion;
     private ArrayList<Oferta> ofertas;
     private ArrayList<Vehiculo> vehiculos;
     
@@ -434,7 +434,7 @@ public class Usuario implements Serializable{
    
     @Override
     public String toString(){
-        String s = "USUARIO\nNombres: " +this.nombres + "\nApellidos: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nOrganización " + this.organizacion;
+        String s = "{ USUARIO\nNombres: " +this.nombres + "\nApellidos: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nClave : "+this.clave+"\nOrganización " + this.organizacion+" } ";
         return s;
     }
 }
