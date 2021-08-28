@@ -10,6 +10,7 @@ import ec.edu.espol.proyecto2p.App;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.InputMismatchException;
 import java.util.ResourceBundle;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -94,28 +95,104 @@ public class MenuController implements Initializable {
 
     @FXML
     private void abrirMenu(MouseEvent event) {
+        System.out.println(Usuario.recuperarUsuario(correo,"usuarios.ser").getVehiculos());
+        
         botonesvbx.getChildren().clear();
         botonesvbx.setAlignment(Pos.CENTER);
         botonesvbx.setSpacing(15);
         
         Button registrarbtn = new Button("Registrar Vehiculo");
+       
+        
         Button aceptarOfbtn = new Button("Aceptar Ofertas");
+        
+        registrarbtn.setOnMouseClicked((MouseEvent e)->{
+            
+        });
+        
         Button ofertarbtn = new Button("Ofertar por un vehiculo");
+        
+        registrarbtn.setOnMouseClicked((MouseEvent e)->{
+            
+        });
         
         Usuario u = Usuario.recuperarUsuario(correo, "usuarios.ser");
         lblrol.setText("ROL : "+u.getRol());
+        
         if (u.getRol().equals("Vendedor")) {
+            
+            registrarbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("registrarVehiculo");
+                    App.setRoot(fxmlloader);
+                    RegistrarVehiculoController rV = fxmlloader.getController();
+                    rV.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
+            
             
             botonesvbx.getChildren().add(registrarbtn);
             botonesvbx.getChildren().add(aceptarOfbtn);
             
             
         }else if (u.getRol().equals("Comprador")) {
-        
+            
+            ofertarbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("ofertarVehiculo");
+                    App.setRoot(fxmlloader);
+                    OfertarVehiculoController oC = fxmlloader.getController();
+                    oC.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
             
             botonesvbx.getChildren().add(ofertarbtn);
         
         }else if (u.getRol().equals("Ambos")) {
+            
+            registrarbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("registrarVehiculo");
+                    App.setRoot(fxmlloader);
+                    RegistrarVehiculoController rV = fxmlloader.getController();
+                    rV.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
+            
+            ofertarbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("ofertarVehiculo");
+                    App.setRoot(fxmlloader);
+                    OfertarVehiculoController oC = fxmlloader.getController();
+                    oC.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
+            
+            
             
             //registrar un vehiculo
             //aceptar ofertas 

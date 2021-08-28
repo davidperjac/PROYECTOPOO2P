@@ -4,6 +4,7 @@
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Usuario.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/util/GFG.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/UsuarioException.java
+/Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/RegistrarVehiculoController.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/ContraseñaException.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Vehiculo.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/model/Oferta.java
@@ -14,3 +15,4 @@
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/PlacaException.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/exceptions/AtributosException.java
 /Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/module-info.java
+/Users/davidperez/NetBeansProjects/proyecto2P/src/main/java/ec/edu/espol/controller/OfertarVehiculoController.java

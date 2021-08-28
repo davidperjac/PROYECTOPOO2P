@@ -15,6 +15,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.PrintWriter;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.Scanner;
@@ -25,8 +26,8 @@ import java.util.regex.Pattern;
  *
  * @author davidperez
  */
-public class Vehiculo {
-
+public class Vehiculo implements Serializable{
+    private String ruta;
     private String tipo;
     private String placa;
     private String marca;
@@ -46,7 +47,8 @@ public class Vehiculo {
     
     // Constructor de Autos
  
-    public Vehiculo(String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
+    public Vehiculo(String ruta,String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision){
+        this.ruta = ruta;
         this.tipo = tipo;
         this.correo_vendedor = correo_vendedor;
         this.placa = placa;
@@ -65,7 +67,8 @@ public class Vehiculo {
     
     // Constructor de Camionetas
     
-    public Vehiculo(String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
+    public Vehiculo(String ruta, String tipo, String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion){
+        this.ruta = ruta;
         this.tipo = tipo;
         this.correo_vendedor = correo_vendedor;
         this.placa = placa;
@@ -85,7 +88,8 @@ public class Vehiculo {
     
     // Constructor de motos
     
-    public Vehiculo( String tipo,String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
+    public Vehiculo(String ruta, String tipo,String correo_vendedor, String placa, String marca, String motor, int anio, String modelo, double recorrido, String color, String combustible, double precio){
+        this.ruta = ruta;
         this.tipo = tipo;
         this.correo_vendedor = correo_vendedor;
         this.placa = placa;
@@ -101,6 +105,14 @@ public class Vehiculo {
     }
 
     //getters y setters
+
+    public String getRuta() {
+        return ruta;
+    }
+
+    public void setRuta(String ruta) {
+        this.ruta = ruta;
+    }
     
     public String getPlaca() {
         return placa;
@@ -244,38 +256,50 @@ public class Vehiculo {
     //funciones de nextvehiculo
     
     
-    public static Vehiculo nextCarro(String nomArchivo, String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision ) throws AtributosException, PlacaException {
+    public static Vehiculo nextCarro(String ruta,String nomArchivo, String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision ) throws AtributosException, PlacaException {
 
         
         if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo)) || (!Util.isAlpha(vidrios)) || (!Util.isAlpha(transmision))) {
            throw new AtributosException("ERROR! Ingrese valores no numericos");
+        }else if (recorrido < 0 || precio < 0 ) {
+            throw new AtributosException("ERROR! Los campos no pueden ser negativos");
+        }else if ( anio < 1886 ) {
+            throw new AtributosException("ERROR! Año no valido");
         }
        
-        Vehiculo vehiculo = new Vehiculo("CARRO", correo_vendedor,Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision );
+        Vehiculo vehiculo = new Vehiculo(ruta,"CARRO", correo_vendedor,Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision );
         return vehiculo;
 
     }
     
-    public static Vehiculo nextCamioneta(String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion ) throws AtributosException, PlacaException {
+    public static Vehiculo nextCamioneta(String ruta,String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio, String vidrios, String transmision, String traccion ) throws AtributosException, PlacaException {
 
         
         if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo)) || (!Util.isAlpha(vidrios)) || (!Util.isAlpha(transmision))  ) {
            throw new AtributosException("ERROR! Ingrese valores no numericos");
+        }else if (recorrido < 0 || precio < 0 ) {
+            throw new AtributosException("ERROR! Los campos no pueden ser negativos");
+        }else if ( anio < 1886 ) {
+            throw new AtributosException("ERROR! Año no valido");
         }
        
-        Vehiculo vehiculo = new Vehiculo("CAMIONETA", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision,traccion );
+        Vehiculo vehiculo = new Vehiculo(ruta,"CAMIONETA", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio,vidrios,transmision,traccion );
         return vehiculo;
 
     }
     
-    public static Vehiculo nextMoto(String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio) throws AtributosException, PlacaException {
+    public static Vehiculo nextMoto(String ruta, String nomArchivo,String correo_vendedor, String placa, String marca, String motor, int anio,String modelo, double recorrido, String color, String combustible, double precio) throws AtributosException, PlacaException {
 
         
         if ( (!Util.isAlpha(marca)) || (!Util.isAlpha(modelo))) {
            throw new AtributosException("ERROR! Ingrese valores no numericos");
+        }else if (recorrido < 0 || precio < 0 ) {
+            throw new AtributosException("ERROR! Los campos no pueden ser negativos");
+        }else if ( anio < 1886 ) {
+            throw new AtributosException("ERROR! Año no valido");
         }
        
-        Vehiculo vehiculo = new Vehiculo("MOTOO", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio);
+        Vehiculo vehiculo = new Vehiculo(ruta,"MOTO", correo_vendedor, Vehiculo.recuperarPlaca(placa,nomArchivo), marca,motor,anio,modelo,recorrido,color,combustible,precio);
         return vehiculo;
 
     }
@@ -304,7 +328,7 @@ public class Vehiculo {
         return null; 
     }
     
-    public void guardarVehiculos(String nomArchivo, ArrayList<Vehiculo> vehiculos) {
+    public static void guardarVehiculos(String nomArchivo, ArrayList<Vehiculo> vehiculos) {
         try(FileOutputStream fous = new FileOutputStream (nomArchivo);ObjectOutputStream out = new ObjectOutputStream (fous);){
             out.writeObject(vehiculos);
             out.flush();
@@ -357,6 +381,10 @@ public class Vehiculo {
         ArrayList<Vehiculo> vehiculos = Vehiculo.recuperarVehiculos(nomArchivo);
         
         Vehiculo vehiculoExis = Vehiculo.searchByPlaca(vehiculos, placa);
+       
+        if (vehiculoExis == null) {
+            return placa;
+        }
         
         if(!formatoPlaca)
             throw new PlacaException ("ERROR! Esta placa no es valida");
@@ -372,6 +400,9 @@ public class Vehiculo {
     // Busca un Vehiculo por placa
     public static Vehiculo searchByPlaca(ArrayList<Vehiculo> vehiculos, String placa){
         
+        if (vehiculos == null ) {
+            return null;
+        }
         for(Vehiculo v : vehiculos){
             if(v.placa.equals(placa))
                 return v;
@@ -418,7 +449,7 @@ public class Vehiculo {
     //sobreescrituras
     @Override
     public String toString() {
-        return "Tipo: " + this.tipo + "\nPlaca: " + placa + "\nMarca: " + marca + "\nMotor: " + motor + "\nAño: " + anio + "\nModelo: " + modelo + "\nRecorrido: " + recorrido + "\nColor: " + color + "\nCombustible: " + combustible + "\nPrecio: " + precio;
+        return "Tipo: " + this.tipo + "\nPlaca: " + placa + "\nMarca: " + marca + "\nMotor: " + motor + "\nAño: " + anio + "\nModelo: " + modelo + "\nRecorrido: " + recorrido + "\nColor: " + color + "\nCombustible: " + combustible + "\nPrecio: " + precio+"\nRuta: " + ruta;
              
     }
     
