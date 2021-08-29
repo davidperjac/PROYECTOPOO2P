@@ -5,10 +5,10 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.exceptions.AtributosException;
 import ec.edu.espol.exceptions.PlacaException;
 import ec.edu.espol.model.Usuario;
-import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.proyecto2p.App;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;

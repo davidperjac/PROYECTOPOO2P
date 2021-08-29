@@ -7,6 +7,8 @@ package ec.edu.espol.model;
 
 import ec.edu.espol.exceptions.AtributosException;
 import ec.edu.espol.exceptions.PlacaException;
+import ec.edu.espol.model.Oferta;
+import ec.edu.espol.model.Usuario;
 import ec.edu.espol.util.Util;
 import java.io.File;
 import java.io.FileInputStream;

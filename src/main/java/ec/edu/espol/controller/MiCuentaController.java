@@ -33,8 +33,8 @@ import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
 import static javafx.scene.text.Font.font;
 import javafx.scene.text.Text;
-import org.apache.commons.codec.DecoderException;
-import org.apache.commons.codec.binary.Hex;
+/*import org.apache.commons.codec.DecoderException;
+/*import org.apache.commons.codec.binary.Hex;
 
 /**
  * FXML Controller class
