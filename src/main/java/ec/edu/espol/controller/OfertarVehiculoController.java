@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.model.Usuario;
 import ec.edu.espol.proyecto2p.App;
@@ -36,14 +37,14 @@ import javafx.scene.input.MouseEvent;
  * @author davidperez
  */
 public class OfertarVehiculoController implements Initializable {
-
+    private ArrayList<Oferta> ofertas;
     private String correo;
     private String contraseña;
-    private String tipo;
+    private String tipo_vehiculo;
     private ArrayList<Usuario> usuarios;
     private ArrayList<Vehiculo> vehiculos;
-    private ArrayList<Vehiculo> vehiculos_tipo;
-    
+    private ArrayList<String> vehiculos_tipo;
+    private String placa_oferta;
     @FXML
     private Button atrasbtn;
     @FXML
@@ -98,6 +99,7 @@ public class OfertarVehiculoController implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle rb) {
          this.vehiculos_tipo = new ArrayList<>();
+         this.ofertas = new ArrayList<>();
         
         if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
             this.usuarios = new ArrayList<Usuario>();
@@ -111,10 +113,10 @@ public class OfertarVehiculoController implements Initializable {
             this.vehiculos = Vehiculo.recuperarVehiculos("vehiculos.ser");
         } 
         
-        ArrayList<String> tipos = new ArrayList<String>();
-        tipos.add("MOTO");
-        tipos.add("CARRO");
-        tipos.add("CAMIONETA");
+       
+        vehiculos_tipo.add("MOTO");
+        vehiculos_tipo.add("CARRO");
+        vehiculos_tipo.add("CAMIONETA");
         
         columnPlaca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlaca()));
         columnMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca()));
@@ -130,7 +132,7 @@ public class OfertarVehiculoController implements Initializable {
        
         
         
-        cbxtipo.setItems(FXCollections.observableArrayList(tipos));
+        cbxtipo.setItems(FXCollections.observableArrayList(vehiculos_tipo));
         
     }    
 
@@ -158,7 +160,7 @@ public class OfertarVehiculoController implements Initializable {
     @FXML
     private void elegirTipo(ActionEvent event) {
        
-        this.tipo = (String)cbxtipo.getValue();
+        this.tipo_vehiculo = (String)cbxtipo.getValue();
         
       
         
@@ -173,7 +175,7 @@ public class OfertarVehiculoController implements Initializable {
          ArrayList<Vehiculo>lista_recorrido= Vehiculo.searchByRecorrido(Double.parseDouble(minRecorrido.getText()),Double.parseDouble(maxRecorrido.getText()), vehiculos);
            ArrayList<String> placas = new ArrayList<>();
         for(Vehiculo v : vehiculos){
-        if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo)  ){
+        if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo_vehiculo)  ){
              lista_vehiculo_filtrado.add(v);
              placas.add(v.getPlaca());
              tablaVehiculos.setItems(FXCollections.observableArrayList( lista_vehiculo_filtrado)); 
@@ -197,29 +199,62 @@ public class OfertarVehiculoController implements Initializable {
 
     @FXML
     private void limpiarBusqueda(MouseEvent event) {
-        tablaVehiculos.getItems().clear();
-        cbxPlaca.getItems().clear();
+    tablaVehiculos.getItems().clear();
+    cbxPlaca.getItems().clear();
+    cbxtipo.getItems().clear();
+    minAnio.setText("");
+    maxAnio.setText("");
+    minRecorrido.setText("");
+    maxRecorrido.setText("");
+    minPrecio.setText("");
+    maxPrecio.setText("");
+    cbxtipo.setItems(FXCollections.observableArrayList(vehiculos_tipo));   
+        
+        
+        
+        
+        
+        
         
     }
 
     @FXML
     private void ejecutarOferta(MouseEvent event) {
+        /*
+        String placa_oferta = this.placa_oferta;
+        double precio_oferta = Double.parseDouble( montoOferta.getText()) ;
         
+        for(Vehiculo v : vehiculos){
+            if(v.getPlaca().equals(placa_oferta)){
+                for(Usuario u: usuarios){
+                    if(this.correo.equals(u.getCorreo())){
+                Oferta oferta = new Oferta(placa_oferta,precio_oferta,this.correo);
+                this.ofertas.add(oferta);
+                        }
+                
+                
+                
+            }
+       
         
-        
-        
-        
+            }
+        }
+        Oferta.guardarOfertas("ofertas.ser", ofertas);
     }
 
     @FXML
     private void seleccionOferta(ActionEvent event) {
         
+        this.placa_oferta = (String)cbxPlaca.getValue();
         
         
         
         
-        
-        
+      */  
+    }
+
+    @FXML
+    private void seleccionOferta(ActionEvent event) {
     }
     
 }

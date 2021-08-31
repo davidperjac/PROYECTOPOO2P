@@ -83,7 +83,7 @@ public class Oferta implements Serializable{
         return null; 
     }
     
-    public void guardarOfertas(String nomArchivo, ArrayList<Oferta> ofertas) {
+    public static void guardarOfertas(String nomArchivo, ArrayList<Oferta> ofertas) {
         try(FileOutputStream fous = new FileOutputStream (nomArchivo);ObjectOutputStream out = new ObjectOutputStream (fous);){
             out.writeObject(ofertas);
             out.flush();
