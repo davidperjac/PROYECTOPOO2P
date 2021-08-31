@@ -148,7 +148,9 @@ public class MenuController implements Initializable {
                 try {
                     fxmlloader = App.loadFXMLLoader("ofertarVehiculo");
                     App.setRoot(fxmlloader);
+                    
                     OfertarVehiculoController oC = fxmlloader.getController();
+                    
                     oC.setCorreo(correo,contraseña);
 
                 } catch (IOException ex) {
