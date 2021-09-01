@@ -7,6 +7,7 @@ package ec.edu.espol.model;
 
 import ec.edu.espol.exceptions.AtributosException;
 import ec.edu.espol.exceptions.PlacaException;
+import ec.edu.espol.exceptions.ValueException;
 import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Usuario;
 import ec.edu.espol.util.Util;
@@ -421,7 +422,11 @@ public class Vehiculo implements Serializable{
         return byTipo;
     }
     
-    public static ArrayList<Vehiculo> searchByRecorrido(double rmin, double rmax, ArrayList<Vehiculo> vehiculos){
+    public static ArrayList<Vehiculo> searchByRecorrido(double rmin, double rmax, ArrayList<Vehiculo> vehiculos) throws ValueException{
+       
+        if (rmin > rmax){
+            throw new ValueException("El valor recorrido minimo es mayor al valor recorrido maximo ingresado");
+        }
         ArrayList<Vehiculo> byRecorrido = new ArrayList<>();
         for(Vehiculo v : vehiculos){
             if(v.recorrido >= rmin && v.recorrido <= rmax)
@@ -430,7 +435,10 @@ public class Vehiculo implements Serializable{
         return byRecorrido;
     }
     
-    public static ArrayList<Vehiculo> searchByPrecio(double pmin, double pmax, ArrayList<Vehiculo> vehiculos){
+    public static ArrayList<Vehiculo> searchByPrecio(double pmin, double pmax, ArrayList<Vehiculo> vehiculos) throws ValueException{
+         if (pmin > pmax){
+            throw new ValueException("El valor precio minimo es mayor al valor recorrido maximo ingresado");
+        }
         ArrayList<Vehiculo> byPrecio = new ArrayList<>();
         for(Vehiculo v : vehiculos){
             if(v.precio >= pmin && v.precio <= pmax)
@@ -439,7 +447,11 @@ public class Vehiculo implements Serializable{
         return byPrecio;
     }
     
-    public static ArrayList<Vehiculo> searchByAnio(int amin, int amax, ArrayList<Vehiculo> vehiculos){
+    public static ArrayList<Vehiculo> searchByAnio(int amin, int amax, ArrayList<Vehiculo> vehiculos) throws ValueException{
+         if (amin > amax){
+            throw new ValueException("El valor de anio minimo es mayor al valor recorrido maximo ingresado");
+        }
+        
         ArrayList<Vehiculo> byAnio = new ArrayList<>();
         for(Vehiculo v : vehiculos){
             if(v.anio >= amin && v.anio <= amax)

@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.exceptions.ValueException;
 import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Vehiculo;
 import ec.edu.espol.model.Usuario;
@@ -168,12 +169,15 @@ public class OfertarVehiculoController implements Initializable {
 
     @FXML
     private void buscarVehiculos(MouseEvent event) {
-        
+      try{  
         ArrayList<Vehiculo> lista_vehiculo_filtrado = new ArrayList<>();
         ArrayList<Vehiculo>lista_precio= Vehiculo.searchByPrecio(Double.parseDouble(minPrecio.getText()),Double.parseDouble(maxPrecio.getText()), vehiculos);
-         ArrayList<Vehiculo>lista_anio= Vehiculo.searchByAnio(Integer.parseInt(minAnio.getText()),Integer.parseInt(maxAnio.getText()), vehiculos);
-         ArrayList<Vehiculo>lista_recorrido= Vehiculo.searchByRecorrido(Double.parseDouble(minRecorrido.getText()),Double.parseDouble(maxRecorrido.getText()), vehiculos);
-           ArrayList<String> placas = new ArrayList<>();
+        ArrayList<Vehiculo>lista_anio= Vehiculo.searchByAnio(Integer.parseInt(minAnio.getText()),Integer.parseInt(maxAnio.getText()), vehiculos);
+        ArrayList<Vehiculo>lista_recorrido= Vehiculo.searchByRecorrido(Double.parseDouble(minRecorrido.getText()),Double.parseDouble(maxRecorrido.getText()), vehiculos);
+        ArrayList<String> placas = new ArrayList<>();
+           
+       
+        
         for(Vehiculo v : vehiculos){
         if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo_vehiculo)  ){
              lista_vehiculo_filtrado.add(v);
@@ -190,6 +194,14 @@ public class OfertarVehiculoController implements Initializable {
         lista_recorrido.clear();
         
         
+      }catch (NumberFormatException ne) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Escriba datos numericos");
+            a.show();
+        }
+        catch (ValueException ne) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Valor minimo ingresado es mayor al valor maximo ingrsado");
+            a.show();
+        }
                 }
                 
     public void setCorreo(String correo, String contraseña) {
@@ -220,7 +232,7 @@ public class OfertarVehiculoController implements Initializable {
 
     @FXML
     private void ejecutarOferta(MouseEvent event) {
-        /*
+       try{
         String placa_oferta = this.placa_oferta;
         double precio_oferta = Double.parseDouble( montoOferta.getText()) ;
         
@@ -240,6 +252,10 @@ public class OfertarVehiculoController implements Initializable {
             }
         }
         Oferta.guardarOfertas("ofertas.ser", ofertas);
+        }catch (NumberFormatException ne) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Escriba datos numericos");
+            a.show();
+        }
     }
 
     @FXML
@@ -250,11 +266,9 @@ public class OfertarVehiculoController implements Initializable {
         
         
         
-      */  
+      
     }
 
-    @FXML
-    private void seleccionOferta(ActionEvent event) {
-    }
+  
     
 }
