@@ -100,14 +100,18 @@ public class RegistrarVehiculoController implements Initializable {
     /**
      * Initializes the controller class.
      */
-    public void setCorreo(String correo, String contraseña) {
+  public void setCorreo(String correo, String contraseña) {
         this.correo = correo;
         this.contraseña = contraseña;
     }
     
-    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
+        
+        
+        
+        
         if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
             this.usuarios = new ArrayList<Usuario>();
         }else {

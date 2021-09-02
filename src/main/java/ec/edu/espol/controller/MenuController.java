@@ -48,6 +48,9 @@ public class MenuController implements Initializable {
     /**
      * Initializes the controller class.
      */
+    
+    
+    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         
@@ -58,13 +61,12 @@ public class MenuController implements Initializable {
         }
     }    
 
-    
-    public void setCorreo(String correo, String contraseña) {
+     public void setCorreo(String correo, String contraseña) {
         this.correo = correo;
         this.contraseña = contraseña;
         lblbienvenida.setText("Bienvenido "+correo);
     }
-   
+       
     @FXML
     private void cerrarSesion(MouseEvent event) {
         try {
@@ -142,8 +144,9 @@ public class MenuController implements Initializable {
                 try {
                     fxmlloader = App.loadFXMLLoader("aceptarOferta");
                     App.setRoot(fxmlloader);
-                    RegistrarVehiculoController rV = fxmlloader.getController();
-                    rV.setCorreo(correo,contraseña);
+                    AceptarOfertaController aO = fxmlloader.getController();
+                    aO.setCorreo(correo,contraseña);
+                    System.out.println(correo);
 
                 } catch (IOException ex) {
                     System.out.println(ex);
@@ -225,8 +228,9 @@ public class MenuController implements Initializable {
                 try {
                     fxmlloader = App.loadFXMLLoader("aceptarOferta");
                     App.setRoot(fxmlloader);
-                    AceptarOfertaController aC = fxmlloader.getController();
-                    aC.setCorreo(correo,contraseña);
+                    AceptarOfertaController aO= fxmlloader.getController();
+                    aO.setCorreo(correo,contraseña);
+                  
 
                 } catch (IOException ex) {
                     System.out.println(ex);

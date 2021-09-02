@@ -72,6 +72,7 @@ public class MiCuentaController implements Initializable {
         }else {
             this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");
         }
+        System.out.println(this.contraseña);
     }
 
     public void setCuenta (String correo, String contraseña) {

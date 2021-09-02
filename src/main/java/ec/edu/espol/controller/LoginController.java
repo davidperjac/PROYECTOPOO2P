@@ -66,6 +66,7 @@ public class LoginController implements Initializable {
                         fxmlloader = App.loadFXMLLoader("menu");
                         App.setRoot(fxmlloader);
                         MenuController mc = fxmlloader.getController();
+                        
                         mc.setCorreo(correo.getText(),contraseña.getText());
 
                     } catch (IOException ex) {

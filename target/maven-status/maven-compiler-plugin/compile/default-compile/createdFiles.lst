@@ -6,6 +6,7 @@ ec\edu\espol\util\Util.class
 ec\edu\espol\model\Vehiculo.class
 module-info.class
 ec\edu\espol\controller\RegistrarVehiculoController.class
+ec\edu\espol\controller\OfertarVehiculoController.class
 ec\edu\espol\controller\LoginController.class
 ec\edu\espol\controller\MenuController.class
 ec\edu\espol\exceptions\ValueException.class

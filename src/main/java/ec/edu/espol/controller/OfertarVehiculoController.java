@@ -49,6 +49,7 @@ public class OfertarVehiculoController implements Initializable {
     private ArrayList<String> vehiculos_tipo;
     private String placa_oferta;
     private ArrayList<Vehiculo> vehiculos_inicio;
+    ArrayList<Vehiculo> vehiculos_ofertados ;
     @FXML
     private Button atrasbtn;
     @FXML
@@ -104,8 +105,10 @@ public class OfertarVehiculoController implements Initializable {
    
     @Override
     public void initialize(URL url, ResourceBundle rb) {
+        
          this.vehiculos_tipo = new ArrayList<>();
          this.ofertas = new ArrayList<>();
+         vehiculos_ofertados = new ArrayList<>();
         
         if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
             this.usuarios = new ArrayList<Usuario>();
@@ -144,7 +147,7 @@ public class OfertarVehiculoController implements Initializable {
        
         tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
         txtFiltro.setText("TODAS LAS PLACAS DISPONIBLES EN EL SISTEMA PARA REALIZAR FILTRAR SON: ");
-        
+        System.out.println(""+correo);
        }    
 
     //tipo
@@ -155,6 +158,8 @@ public class OfertarVehiculoController implements Initializable {
     
     @FXML
     private void atras(MouseEvent event) {
+         Vehiculo.guardarVehiculos("vehiculos.ser", this.vehiculos);
+         System.out.println(this.vehiculos_ofertados);
         FXMLLoader fxmlloader; 
         try {
             fxmlloader = App.loadFXMLLoader("menu");
@@ -256,25 +261,23 @@ public class OfertarVehiculoController implements Initializable {
     @FXML
     private void ejecutarOferta(MouseEvent event) {
        try{
+        
         String placa_oferta = this.placa_oferta;
         double precio_oferta = Double.parseDouble( montoOferta.getText()) ;
-        
-        for(Vehiculo v : vehiculos){
-            if(v.getPlaca().equals(placa_oferta)){
-                for(Usuario u: usuarios){
-                    if(this.correo.equals(u.getCorreo())){
-                Oferta oferta = new Oferta(placa_oferta,precio_oferta,this.correo);
-                this.ofertas.add(oferta);
-                        }
-                
-                
-                
-            }
-       
-        
-            }
-        }
+        Oferta oferta = new Oferta(placa_oferta,precio_oferta,this.correo);
+        this.ofertas.add(oferta);
         Oferta.guardarOfertas("ofertas.ser", ofertas);
+        
+        for (Vehiculo v: vehiculos){
+            if(v.getPlaca().equals(this.placa_oferta)){
+                v.setOfertas(ofertas);
+              
+            }
+            
+        }
+      
+        Alert a = new Alert(Alert.AlertType.INFORMATION,"SU OFERTA HA SIDO AGREGADA EXITOSAMENTE");
+        a.show();
         }catch (NumberFormatException ne) {
             Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! ESCRIBA DATOS NUMERICOS");
             a.show();
