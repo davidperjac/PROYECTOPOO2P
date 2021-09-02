@@ -438,7 +438,9 @@ public class Vehiculo implements Serializable{
     public static ArrayList<Vehiculo> searchByPrecio(double pmin, double pmax, ArrayList<Vehiculo> vehiculos) throws ValueException{
          if (pmin > pmax){
             throw new ValueException("El valor precio minimo es mayor al valor recorrido maximo ingresado");
-        }
+        }else{
+             
+         }
         ArrayList<Vehiculo> byPrecio = new ArrayList<>();
         for(Vehiculo v : vehiculos){
             if(v.precio >= pmin && v.precio <= pmax)

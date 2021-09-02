@@ -5,6 +5,7 @@
  */
 package ec.edu.espol.controller;
 
+import ec.edu.espol.exceptions.EmptyException;
 import ec.edu.espol.exceptions.ValueException;
 import ec.edu.espol.model.Oferta;
 import ec.edu.espol.model.Vehiculo;
@@ -31,6 +32,7 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.text.Text;
 
 /**
  * FXML Controller class
@@ -46,6 +48,7 @@ public class OfertarVehiculoController implements Initializable {
     private ArrayList<Vehiculo> vehiculos;
     private ArrayList<String> vehiculos_tipo;
     private String placa_oferta;
+    private ArrayList<Vehiculo> vehiculos_inicio;
     @FXML
     private Button atrasbtn;
     @FXML
@@ -90,6 +93,8 @@ public class OfertarVehiculoController implements Initializable {
     private TextField montoOferta;
     @FXML
     private Button btnOfertar;
+    @FXML
+    private Text txtFiltro;
 
     /**
      * Initializes the controller class.
@@ -114,7 +119,7 @@ public class OfertarVehiculoController implements Initializable {
             this.vehiculos = Vehiculo.recuperarVehiculos("vehiculos.ser");
         } 
         
-       
+        
         vehiculos_tipo.add("MOTO");
         vehiculos_tipo.add("CARRO");
         vehiculos_tipo.add("CAMIONETA");
@@ -125,17 +130,22 @@ public class OfertarVehiculoController implements Initializable {
         columnMotor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMotor()));
         columnColor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getColor()));
         /*
-        columnAnio.setCellValueFactory(data -> new SimpleIntegerProperty(data.getValue().getAnio()));
+        columnAnio.setCellValueFactory(data -> new SimpleStringProperty(Integer.toString(data.getValue().getAnio())));
         columnRecorrido.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getRecorrido()));
         columnPrecio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlaca()));
-          */    
+          */ 
         
        
         
         
         cbxtipo.setItems(FXCollections.observableArrayList(vehiculos_tipo));
         
-    }    
+       
+       
+        tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
+        txtFiltro.setText("TODAS LAS PLACAS DISPONIBLES EN EL SISTEMA PARA REALIZAR FILTRAR SON: ");
+        
+       }    
 
     //tipo
     //recorrido
@@ -168,15 +178,22 @@ public class OfertarVehiculoController implements Initializable {
     }
 
     @FXML
-    private void buscarVehiculos(MouseEvent event) {
-      try{  
+    private void buscarVehiculos(MouseEvent event) throws EmptyException {
+        tablaVehiculos.getItems().clear();
+      Alert c = new Alert(Alert.AlertType.ERROR,"ERROR! EXISTEN CASILLAS SIN LLENAR");
+       if(minAnio.getText().equals("") || maxAnio.getText().equals("") || minPrecio.getText().equals("") || maxPrecio.getText().equals("") || minRecorrido.getText().equals("")|| maxRecorrido.getText().equals("") ){
+        c.show(); 
+       tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
+       }
+       else{
+        try{  
         ArrayList<Vehiculo> lista_vehiculo_filtrado = new ArrayList<>();
         ArrayList<Vehiculo>lista_precio= Vehiculo.searchByPrecio(Double.parseDouble(minPrecio.getText()),Double.parseDouble(maxPrecio.getText()), vehiculos);
         ArrayList<Vehiculo>lista_anio= Vehiculo.searchByAnio(Integer.parseInt(minAnio.getText()),Integer.parseInt(maxAnio.getText()), vehiculos);
         ArrayList<Vehiculo>lista_recorrido= Vehiculo.searchByRecorrido(Double.parseDouble(minRecorrido.getText()),Double.parseDouble(maxRecorrido.getText()), vehiculos);
         ArrayList<String> placas = new ArrayList<>();
            
-       
+   
         
         for(Vehiculo v : vehiculos){
         if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo_vehiculo)  ){
@@ -192,18 +209,24 @@ public class OfertarVehiculoController implements Initializable {
         lista_precio.clear();
         lista_anio.clear();
         lista_recorrido.clear();
+         txtFiltro.setText(" LAS PLACAS DISPONIBLES A LA BUSQUEDA RESPECTIVA SON: ");
         
-        
-      }catch (NumberFormatException ne) {
-            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Escriba datos numericos");
+      
+        }catch (NumberFormatException ne) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! FALTA INGRESAR DATOS O EL DATO INGRESADO ES INCORRECTO");
             a.show();
+            tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
         }
-        catch (ValueException ne) {
-            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Valor minimo ingresado es mayor al valor maximo ingrsado");
+        catch (ValueException e) {
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! VALOR MINIMO INGRESADO ES MAYOR AL VALOR MAXIMO");
             a.show();
+            tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
         }
+      
+      
+      
                 }
-                
+    }
     public void setCorreo(String correo, String contraseña) {
         this.correo = correo;
         this.contraseña = contraseña;
@@ -253,7 +276,7 @@ public class OfertarVehiculoController implements Initializable {
         }
         Oferta.guardarOfertas("ofertas.ser", ofertas);
         }catch (NumberFormatException ne) {
-            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Escriba datos numericos");
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! ESCRIBA DATOS NUMERICOS");
             a.show();
         }
     }

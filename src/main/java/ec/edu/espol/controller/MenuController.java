@@ -137,6 +137,32 @@ public class MenuController implements Initializable {
             });
             
             
+             aceptarOfbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("aceptarOferta");
+                    App.setRoot(fxmlloader);
+                    RegistrarVehiculoController rV = fxmlloader.getController();
+                    rV.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             botonesvbx.getChildren().add(registrarbtn);
             botonesvbx.getChildren().add(aceptarOfbtn);
             
@@ -165,6 +191,7 @@ public class MenuController implements Initializable {
             registrarbtn.setOnMouseClicked((MouseEvent e)->{
                 FXMLLoader fxmlloader; 
                 try {
+                    
                     fxmlloader = App.loadFXMLLoader("registrarVehiculo");
                     App.setRoot(fxmlloader);
                     RegistrarVehiculoController rV = fxmlloader.getController();
@@ -191,6 +218,26 @@ public class MenuController implements Initializable {
                     a.show();
                 }
             });
+            
+            
+              aceptarOfbtn.setOnMouseClicked((MouseEvent e)->{
+                FXMLLoader fxmlloader; 
+                try {
+                    fxmlloader = App.loadFXMLLoader("aceptarOferta");
+                    App.setRoot(fxmlloader);
+                    AceptarOfertaController aC = fxmlloader.getController();
+                    aC.setCorreo(correo,contraseña);
+
+                } catch (IOException ex) {
+                    System.out.println(ex);
+                    Alert a = new Alert(Alert.AlertType.ERROR,"No se pudo abrir el archivo fxml");
+                    a.show();
+                }
+            });
+            
+            
+            
+            
             
             
             

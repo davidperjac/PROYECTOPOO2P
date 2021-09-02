@@ -161,5 +161,10 @@
             <Text strokeType="OUTSIDE" strokeWidth="0.0" text="COLOQUE EL MONTO A OFERTAR" wrappingWidth="191.6328125" GridPane.halignment="CENTER" GridPane.rowIndex="1" />
          </children>
       </GridPane>
+      <Text fx:id="txtFiltro" strokeType="OUTSIDE" strokeWidth="0.0" text="Text" GridPane.columnIndex="3" GridPane.halignment="CENTER">
+         <GridPane.margin>
+            <Insets right="90.0" />
+         </GridPane.margin>
+      </Text>
    </children>
 </GridPane>

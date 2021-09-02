@@ -266,7 +266,7 @@ public class RegistrarVehiculoController implements Initializable {
             Alert a = new Alert(Alert.AlertType.ERROR,px.getMessage());
             a.show();
         }catch (NumberFormatException ne) {
-            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! Escriba datos numericos");
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR!  FALTA INGRESAR DATOS O EL DATO INGRESADO ES INCORRECTO");
             a.show();
         }
     }
