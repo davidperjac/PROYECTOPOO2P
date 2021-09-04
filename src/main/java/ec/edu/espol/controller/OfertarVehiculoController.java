@@ -1,4 +1,4 @@
-/*
+    /*
  * To change this license header, choose License Headers in Project Properties.
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
@@ -49,7 +49,7 @@ public class OfertarVehiculoController implements Initializable {
     private ArrayList<String> vehiculos_tipo;
     private String placa_oferta;
     private ArrayList<Vehiculo> vehiculos_inicio;
-    ArrayList<Vehiculo> vehiculos_ofertados ;
+  
     @FXML
     private Button atrasbtn;
     @FXML
@@ -107,8 +107,8 @@ public class OfertarVehiculoController implements Initializable {
     public void initialize(URL url, ResourceBundle rb) {
         
          this.vehiculos_tipo = new ArrayList<>();
-         this.ofertas = new ArrayList<>();
-         vehiculos_ofertados = new ArrayList<>();
+         
+         
         
         if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
             this.usuarios = new ArrayList<Usuario>();
@@ -121,6 +121,17 @@ public class OfertarVehiculoController implements Initializable {
         }else {
             this.vehiculos = Vehiculo.recuperarVehiculos("vehiculos.ser");
         } 
+        
+         if (Oferta.recuperarOfertas("ofertas.ser") == null ) {
+            this.ofertas = new ArrayList<Oferta>();
+        }else {
+            this.ofertas = Oferta.recuperarOfertas("ofertas.ser");
+        } 
+        
+        
+        
+        
+        
         
         
         vehiculos_tipo.add("MOTO");
@@ -159,7 +170,7 @@ public class OfertarVehiculoController implements Initializable {
     @FXML
     private void atras(MouseEvent event) {
          Vehiculo.guardarVehiculos("vehiculos.ser", this.vehiculos);
-         System.out.println(this.vehiculos_ofertados);
+        
         FXMLLoader fxmlloader; 
         try {
             fxmlloader = App.loadFXMLLoader("menu");
@@ -269,8 +280,10 @@ public class OfertarVehiculoController implements Initializable {
         Oferta.guardarOfertas("ofertas.ser", ofertas);
         
         for (Vehiculo v: vehiculos){
-            if(v.getPlaca().equals(this.placa_oferta)){
-                v.setOfertas(ofertas);
+            if(v.getPlaca().equals(this.placa_oferta) && v.getPlaca().equals(oferta.getPlaca_vehiculo()) ){
+                 ArrayList<Oferta> vehiculos_ofertas = v.getOfertas();
+                vehiculos_ofertas.add(oferta);
+                v.setOfertas(vehiculos_ofertas);
               
             }
             
@@ -288,7 +301,7 @@ public class OfertarVehiculoController implements Initializable {
     private void seleccionOferta(ActionEvent event) {
         
         this.placa_oferta = (String)cbxPlaca.getValue();
-        
+       
         
         
         
