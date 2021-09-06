@@ -39,16 +39,17 @@
             <Font name="Futura Medium" size="15.0" />
          </font>
       </Button>
-      <TableView fx:id="tablaVehiculos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="382.0" prefWidth="606.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
+      <TableView fx:id="tablaVehiculos" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="414.0" prefWidth="796.0" GridPane.columnIndex="3" GridPane.halignment="CENTER" GridPane.rowIndex="1" GridPane.valignment="CENTER">
         <columns>
           <TableColumn fx:id="columnPlaca" prefWidth="61.0" text="PLACA" />
           <TableColumn fx:id="columnMarca" prefWidth="78.0" text="MARCA" />
             <TableColumn fx:id="columnModelo" prefWidth="70.0" text="MODELO" />
-            <TableColumn fx:id="columnMotor" prefWidth="78.0" text="MOTOR" />
+            <TableColumn fx:id="columnMotor" prefWidth="78.0" text="TIPO" />
             <TableColumn fx:id="columnColor" prefWidth="77.0" text="COLOR" />
             <TableColumn fx:id="columnAnio" prefWidth="64.0" text="ANIO" />
-            <TableColumn fx:id="columnRecorrido" prefWidth="85.0" text="RECORRIDO" />
-            <TableColumn fx:id="columnPrecio" prefWidth="115.0" text="PRECIO" />
+            <TableColumn fx:id="columnRecorrido" prefWidth="96.0" text="RECORRIDO" />
+            <TableColumn fx:id="columnPrecio" prefWidth="104.0" text="PRECIO" />
+            <TableColumn fx:id="columnCorreo" prefWidth="151.0" text="CORREO_VENDEDOR" />
         </columns>
          <GridPane.margin>
             <Insets bottom="100.0" left="300.0" right="400.0" />

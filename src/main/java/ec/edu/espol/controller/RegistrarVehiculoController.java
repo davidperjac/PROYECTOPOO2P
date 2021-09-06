@@ -125,9 +125,9 @@ public class RegistrarVehiculoController implements Initializable {
         } 
        
         ArrayList<String> tipos = new ArrayList<String>();
-        tipos.add("Moto");
-        tipos.add("Carro");
-        tipos.add("Camioneta");
+        tipos.add("MOTO");
+        tipos.add("CARRO");
+        tipos.add("CAMIONETA");
         
         cbxtipo.setItems(FXCollections.observableArrayList(tipos));
         
@@ -149,7 +149,7 @@ public class RegistrarVehiculoController implements Initializable {
 
 
 
-        if (!tipo.equals("Moto")) {
+        if (!tipo.equals("MOTO")) {
             
             Text vidrios = new Text("VIDRIOS");
             vidrios.setTextAlignment(TextAlignment.RIGHT);
@@ -169,7 +169,7 @@ public class RegistrarVehiculoController implements Initializable {
             datosnomoto.add(transmision,0,1);
             datosnomoto.add(transmisionfield,1,1);
             
-            if (tipo.equals("Camioneta")) {
+            if (tipo.equals("CAMIONETA")) {
                 Text traccion = new Text("TRACCION");
                 traccion.setTextAlignment(TextAlignment.RIGHT);
                 traccion.setFont(Font.font ("Futura", 13));

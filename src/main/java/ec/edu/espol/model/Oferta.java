@@ -20,7 +20,7 @@ import java.util.Scanner;
  *
  * @author davidperez
  */
-public class Oferta implements Serializable{
+public class Oferta implements Serializable, Comparable<Oferta>{
     private String placa_vehiculo;
     private double precio_ofertado;
     private Vehiculo vehiculo;
@@ -39,6 +39,10 @@ public class Oferta implements Serializable{
 
     public double getPrecio_ofertado() {
         return precio_ofertado;
+    }
+
+    public String getPlaca_vehiculo() {
+        return placa_vehiculo;
     }
 
     public Vehiculo getVehiculo() {
@@ -110,5 +114,12 @@ public class Oferta implements Serializable{
     @Override
     public String toString() {
         return "Correo comprador: " + correo_comprador + "\nPrecio Ofertado: " + precio_ofertado;
+    }
+
+    @Override
+    public int compareTo(Oferta o) {
+         double precio_1= this.precio_ofertado;
+         double precio_2= o.getPrecio_ofertado();
+         return Double.compare(precio_1,precio_2);
     }
 }

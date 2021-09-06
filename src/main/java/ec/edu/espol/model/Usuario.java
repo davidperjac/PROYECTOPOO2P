@@ -24,17 +24,14 @@ import java.util.Properties;
 import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-/*import javax.mail.Message;
+import javax.mail.Message;
 import javax.mail.Session;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 
-/**
- *
- * @author davidperez
- */
+
 public class Usuario implements Serializable{
     private String rol;
     private String correo;
@@ -125,7 +122,7 @@ public class Usuario implements Serializable{
     }
     
     
-    /*
+    
     //funciones de vendedor
     
     public static void enviarCorreo(String destinatario, String marca, String modelo,String motor, double dinero, String placa) {
@@ -169,7 +166,7 @@ public class Usuario implements Serializable{
         return usuarioV;
     }
     
-*/
+
     //funciones de comprador
     
     public static Usuario inicioSesionC(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
