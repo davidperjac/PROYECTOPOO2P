@@ -11,7 +11,9 @@ import ec.edu.espol.util.GFG;
 import ec.edu.espol.util.Util;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -25,8 +27,10 @@ import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import javax.mail.Message;
+import javax.mail.MessagingException;
 import javax.mail.Session;
 import javax.mail.Transport;
+import javax.mail.internet.AddressException;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
@@ -127,60 +131,47 @@ public class Usuario implements Serializable{
     
     public static void enviarCorreo(String destinatario, String marca, String modelo,String motor, double dinero, String placa) {
 
-        Properties props = new Properties();
-        
-        props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
-        props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
-        props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
-        //props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
-        
-        props.put("mail.smtp.user", "sistema.dij.poo@gmail.com");
-        props.put("mail.smtp.clave", "ProyectoPOO2P");    //La clave de la cuenta
-
-
-        Session session = Session.getDefaultInstance(props);
-        MimeMessage message = new MimeMessage(session);
-
         try {
-            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));   //Se podrían añadir varios de la misma manera
+            
+            Properties props = new Properties();
+            props.load(new FileReader("info.properties"));
+            
+            /*
+            props.put("mail.smtp.host", "smtp.gmail.com");  //El servidor SMTP de Google
+            props.put("mail.smtp.port", "587"); //El puerto SMTP seguro de Google
+            props.put("mail.smtp.starttls.enable", "true"); //Para conectar de manera segura al servidor SMTP
+            props.put("mail.smtp.auth", "true");    //Usar autenticación mediante usuario y clave
+            
+            props.put("mail.smtp.user", "sistema.di.poo@gmail.com");
+            props.put("mail.smtp.clave", "ProyectoPOO2P");    //La clave de la cuenta
+            */
+            
+            Session session = Session.getDefaultInstance(props);
+            MimeMessage message = new MimeMessage(session);
+            
+            
+            message.addRecipient(Message.RecipientType.TO, new InternetAddress(destinatario));
             message.setSubject("Oferta aceptada");
-            message.setText("Un gusto le saluda el sistema de la app SDF. Se ha aceptado su oferta de $"+dinero+" por el vehiculo "+marca+" "+modelo+" "+motor+" con la placa: "+placa);
+            message.setText("Un gusto le saluda el sistema de la app DI. Se ha aceptado su oferta de $"+dinero+" por el vehiculo "+marca+" "+modelo+" "+motor+" con la placa: "+placa);
             Transport transport = session.getTransport("smtp");
-            transport.connect("smtp.gmail.com", "sistema.dij.poo@gmail.com", "ProyectoPOO2P");
+
+            transport.connect(props.getProperty("mail.smtp.host"), props.getProperty("mail.smtp.user"),props.getProperty("mail.smtp.clave"));
+
             transport.sendMessage(message, message.getAllRecipients());
             transport.close();
-            System.out.println("Se ha aceptado la oferta exitosamente y se ha notificado al comprador de su vehículo.");
-            System.out.println(" -------------------------------------------------------------------------------- ");
+ 
+        }catch (FileNotFoundException ex) {
+            ex.printStackTrace();   
+        }catch (IOException ex) {
+            ex.printStackTrace();
+        }catch (AddressException ex) {
+            ex.printStackTrace();
+        }catch (MessagingException ex) {
+            ex.printStackTrace();
         }
-        catch (Exception e) {
-            e.printStackTrace();   
-        }
-    }
-    
-    public static Usuario inicioSesionV(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
-        
-        if (!Usuario.validarUsuario(correo,clave,nomfile)) 
-            throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
-        
-        Usuario usuarioV = Usuario.recuperarUsuario(correo, nomfile);
-        return usuarioV;
     }
     
 
-    //funciones de comprador
-    
-    public static Usuario inicioSesionC(String correo, String clave, String nomfile) throws NoSuchAlgorithmException, UsuarioException{
-        
-        if (!Usuario.validarUsuario(correo,clave, nomfile)) 
-            throw new UsuarioException("ERROR! El usuario no se encuentra registrado");
-        
-        Usuario usuarioC = Usuario.recuperarUsuario(correo,nomfile);
-        return usuarioC;
-    }
-    
-    
-    
-    
     // funciones recuperadoras
     
     public static ArrayList<String> recuperarCorreos(String nomfile){
@@ -308,7 +299,7 @@ public class Usuario implements Serializable{
    
     @Override
     public String toString(){
-        String s = "{ USUARIO\nNombres: " +this.nombres + "\nApellidos: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nClave : "+this.clave+"\nOrganización " + this.organizacion+" } ";
+        String s = "{ USUARIO\nNombre: " +this.nombres + "\nApellido: " + this.apellidos+ "\nCorreo Electrónico: " + this.correo + "\nClave : "+this.clave+"\nOrganización: " + this.organizacion+" } ";
         return s;
     }
 }

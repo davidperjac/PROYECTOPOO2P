@@ -69,27 +69,25 @@ public class AceptarOfertaController implements Initializable {
         System.out.println(this.contraseña);
     }
     
-   
-    
+
     @Override
     public void initialize(URL url, ResourceBundle rb) {
         // TODO 
        
         
-          if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
+        if (Usuario.recuperarUsuarios("usuarios.ser") == null) {
             this.usuarios = new ArrayList<Usuario>();
         }else {
-            this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");
-           
+            this.usuarios = Usuario.recuperarUsuarios("usuarios.ser");  
         }
           
-          if (Oferta.recuperarOfertas("ofertas.ser") == null) {
+        if (Oferta.recuperarOfertas("ofertas.ser") == null) {
             this.ofertas = new ArrayList<Oferta>();
         }else {
             this.ofertas = Oferta.recuperarOfertas("ofertas.ser");
         }  
         
-         if (Vehiculo.recuperarVehiculos("vehiculos.ser") == null ) {
+        if (Vehiculo.recuperarVehiculos("vehiculos.ser") == null ) {
             this.vehiculos = new ArrayList<Vehiculo>();
         }else {
             this.vehiculos = Vehiculo.recuperarVehiculos("vehiculos.ser");
@@ -101,9 +99,7 @@ public class AceptarOfertaController implements Initializable {
             this.vehiculos_ofertados = Vehiculo.recuperarVehiculos("vehiculos_ofertas.ser");
         } 
     }   
-    
-   
-  
+
 
     @FXML
     private void atras(MouseEvent event) {
@@ -121,15 +117,7 @@ public class AceptarOfertaController implements Initializable {
         
         
     }
-    
 
-
-
- 
-          
-        
-          
-     
     @FXML
     private void elegirPlaca(ActionEvent event) {
            this.placa = (String)cbxPlacas.getValue();
@@ -147,14 +135,9 @@ public class AceptarOfertaController implements Initializable {
             this.placas.add(v.getPlaca());   
              System.out.println(v.getPlaca());
            
-         }
-         
-           
+            }
         }
-          
-          
-          cbxPlacas.setItems(FXCollections.observableArrayList(this.placas)); 
-         
+        cbxPlacas.setItems(FXCollections.observableArrayList(this.placas));         
     }   
 
     @FXML
@@ -162,74 +145,56 @@ public class AceptarOfertaController implements Initializable {
      vbox.getChildren().clear();
        
         for(Vehiculo v : vehiculos){
-       
-         
-               if( v.getPlaca().equals(this.placa) && !v.getOfertas().isEmpty() ){
-                   this.oferta_vehiculo= v.getOfertas();
-                    oferta_vehiculo.sort((Oferta of1,Oferta of2) -> of2.compareTo(of1));
-                   System.out.println(this.oferta_vehiculo);
-                   for(Oferta of : this.oferta_vehiculo){
-                    
-                    
-                    Text tx_comprador = new Text("CORREO DEL COMPRADOR:  "+of.getCorreo_comprador());
-                    tx_comprador.setFont(Font.font ("Verdana", 14));
-;
-                    Text tx_precio_ofertado = new Text("EL PRECIO OFERTADO ES:  "+of.getPrecio_ofertado());
-                    Button btn = new Button();
-                    btn.setText("ACEPTAR");
-                    
-                    btn.setOnMouseClicked((MouseEvent e)->{
-                        Usuario.enviarCorreo(of.getCorreo_comprador(),v.getPlaca(), v.getModelo(), v.getMotor(), of.getPrecio_ofertado(), v.getPlaca());
-                       ArrayList<Oferta> oferta_eliminada = v.getOfertas();
-                       oferta_eliminada.clear();
-                       v.setOfertas(oferta_eliminada);
-                       ofertas.remove(of);
-                       vehiculos.remove(v);
-                       
-                       Vehiculo.guardarVehiculos("vehiculos.ser", vehiculos);
-                       Oferta.guardarOfertas("ofertas.ser", ofertas);
-                       Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Se acepto la oferta del usuario:  "+of.getCorreo_comprador());
-                       a.show();
-                      vbox.getChildren().clear();
-                     
-                      
-                       
-                      
-                      
-                   });
+
+            if( v.getPlaca().equals(this.placa) && !v.getOfertas().isEmpty() ){
+                this.oferta_vehiculo= v.getOfertas();
+                oferta_vehiculo.sort((Oferta of1,Oferta of2) -> of2.compareTo(of1));
+                for(Oferta of : this.oferta_vehiculo){
+
+
+                 Text tx_comprador = new Text("CORREO DEL COMPRADOR:  "+of.getCorreo_comprador());
+                 tx_comprador.setFont(Font.font ("Verdana", 14));
+    ;
+                 Text tx_precio_ofertado = new Text("EL PRECIO OFERTADO ES:  "+of.getPrecio_ofertado());
+                 Button btn = new Button();
+                 btn.setText("ACEPTAR");
+
+                 btn.setOnMouseClicked((MouseEvent e)->{
+                    Usuario.enviarCorreo(of.getCorreo_comprador(),v.getMarca(), v.getModelo(), v.getMotor(), of.getPrecio_ofertado(), v.getPlaca());
+                    ArrayList<Oferta> oferta_eliminada = v.getOfertas();
+                    oferta_eliminada.clear();
+                    v.setOfertas(oferta_eliminada);
+                    ofertas.remove(of);
+                    vehiculos.remove(v);
+
+                    Vehiculo.guardarVehiculos("vehiculos.ser", vehiculos);
+                    Oferta.guardarOfertas("ofertas.ser", ofertas);
+                    Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Se acepto la oferta del usuario:  "+of.getCorreo_comprador());
+                    a.show();
+                    vbox.getChildren().clear();
+
+                });
+
+                vbox.getChildren().add(tx_precio_ofertado);
+                vbox.getChildren().add(tx_comprador);
+                vbox.getChildren().add(btn);
+                vbox.setPadding(new Insets(30, 30, 30, 30));
+                /* vbox.setPrefWidth(200);
+                 vbox.setPrefHeight(200);
+                 vbox.setPadding(new Insets(10, 10, 10, 10));
+                */
+                }
                    
-                    
-                   
-                   
-                    vbox.getChildren().add(tx_precio_ofertado);
-                    vbox.getChildren().add(tx_comprador);
-                    vbox.getChildren().add(btn);
-                    vbox.setPadding(new Insets(30, 30, 30, 30));
-                   /* vbox.setPrefWidth(200);
-                    vbox.setPrefHeight(200);
-                    vbox.setPadding(new Insets(10, 10, 10, 10));
-                   */
-                   }
-                   
-               }else if( v.getPlaca().equals(this.placa) && v.getOfertas().isEmpty()){
-                   Alert a = new Alert(Alert.AlertType.ERROR,"NO EXISTEN OFERTAS PARA ESTE VEHICULO ");
-                       a.show();
-                           
-                           }
-               
-               
-               
+                }else if( v.getPlaca().equals(this.placa) && v.getOfertas().isEmpty()){
+                    Alert a = new Alert(Alert.AlertType.ERROR,"NO EXISTEN OFERTAS PARA ESTE VEHICULO ");
+                        a.show();
+
+                 }
+
             }
-             
-             
-               
-           
-        
-       
-    }
-        
-        
-        
+
+        }
+  
     }
 
 
