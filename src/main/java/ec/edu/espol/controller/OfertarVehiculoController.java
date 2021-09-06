@@ -81,11 +81,11 @@ public class OfertarVehiculoController implements Initializable {
     @FXML
     private TableColumn<Vehiculo,String> columnColor;
     @FXML
-    private TableColumn<Vehiculo,Integer> columnAnio;
+    private TableColumn<Vehiculo,String> columnAnio;
     @FXML
-    private TableColumn<Vehiculo,Double> columnRecorrido;
+    private TableColumn<Vehiculo,String> columnRecorrido;
     @FXML
-    private TableColumn<Vehiculo,Double> columnPrecio;
+    private TableColumn<Vehiculo,String> columnPrecio;
     @FXML
     private Button buscarbtn1;
     @FXML
@@ -96,6 +96,8 @@ public class OfertarVehiculoController implements Initializable {
     private Button btnOfertar;
     @FXML
     private Text txtFiltro;
+    @FXML
+    private TableColumn<Vehiculo,String> columnCorreo;
 
     /**
      * Initializes the controller class.
@@ -141,14 +143,14 @@ public class OfertarVehiculoController implements Initializable {
         columnPlaca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlaca()));
         columnMarca.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMarca()));
         columnModelo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getModelo()));
-        columnMotor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getMotor()));
+        columnMotor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo()));
         columnColor.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getColor()));
-        /*
-        columnAnio.setCellValueFactory(data -> new SimpleStringProperty(Integer.toString(data.getValue().getAnio())));
-        columnRecorrido.setCellValueFactory(data -> new SimpleDoubleProperty(data.getValue().getRecorrido()));
-        columnPrecio.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getPlaca()));
-          */ 
         
+        columnAnio.setCellValueFactory(data -> new SimpleStringProperty(Integer.toString(data.getValue().getAnio())));
+        columnRecorrido.setCellValueFactory(data -> new SimpleStringProperty(Double.toString(data.getValue().getRecorrido())));
+        columnPrecio.setCellValueFactory(data -> new SimpleStringProperty(Double.toString(data.getValue().getPrecio())));
+       /* columnTipo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getTipo()));*/
+        columnCorreo.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getCorreo_vendedor()));
        
         
         
@@ -212,7 +214,7 @@ public class OfertarVehiculoController implements Initializable {
    
         
         for(Vehiculo v : vehiculos){
-        if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo_vehiculo)  ){
+        if(lista_precio.contains(v) && lista_anio.contains(v) && lista_recorrido.contains(v) && v.getTipo().equals(this.tipo_vehiculo) && !v.getCorreo_vendedor().equals(this.correo) ){
              lista_vehiculo_filtrado.add(v);
              placas.add(v.getPlaca());
              tablaVehiculos.setItems(FXCollections.observableArrayList( lista_vehiculo_filtrado)); 
@@ -260,8 +262,8 @@ public class OfertarVehiculoController implements Initializable {
     minPrecio.setText("");
     maxPrecio.setText("");
     cbxtipo.setItems(FXCollections.observableArrayList(vehiculos_tipo));   
-        
-        
+    tablaVehiculos.setItems(FXCollections.observableArrayList(vehiculos));
+    montoOferta.setText("");
         
         
         
@@ -280,19 +282,26 @@ public class OfertarVehiculoController implements Initializable {
         Oferta.guardarOfertas("ofertas.ser", ofertas);
         
         for (Vehiculo v: vehiculos){
-            if(v.getPlaca().equals(this.placa_oferta) && v.getPlaca().equals(oferta.getPlaca_vehiculo()) ){
+            for(Usuario u: usuarios){
+            if(v.getPlaca().equals(this.placa_oferta) && v.getPlaca().equals(oferta.getPlaca_vehiculo()) && u.getCorreo().equals(v.getCorreo_vendedor()) ){
                  ArrayList<Oferta> vehiculos_ofertas = v.getOfertas();
                 vehiculos_ofertas.add(oferta);
                 v.setOfertas(vehiculos_ofertas);
-              
+                
+            
+            } 
+                
+                
+            } 
             }
             
-        }
+            
+        
       
         Alert a = new Alert(Alert.AlertType.INFORMATION,"SU OFERTA HA SIDO AGREGADA EXITOSAMENTE");
         a.show();
         }catch (NumberFormatException ne) {
-            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR! ESCRIBA DATOS NUMERICOS");
+            Alert a = new Alert(Alert.AlertType.ERROR,"ERROR!LLENE TODAS LAS  CASILLAS VACIAS E INGRESE DATOS NUMERICOS");
             a.show();
         }
     }

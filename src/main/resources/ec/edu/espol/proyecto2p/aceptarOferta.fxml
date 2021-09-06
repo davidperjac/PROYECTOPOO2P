@@ -5,48 +5,56 @@
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.ScrollPane?>
 <?import javafx.scene.layout.BorderPane?>
-<?import javafx.scene.layout.FlowPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Text?>
 
 <BorderPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/16" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ec.edu.espol.controller.AceptarOfertaController">
    <top>
       <HBox prefHeight="100.0" prefWidth="200.0" BorderPane.alignment="CENTER">
          <children>
-            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SELECCIONE LA PLACA" />
             <Text strokeType="OUTSIDE" strokeWidth="0.0">
                <HBox.margin>
                   <Insets top="60.0" />
                </HBox.margin>
             </Text>
-            <ComboBox fx:id="cbxPlacas" onAction="#elegirPlaca" onMouseReleased="#filtrarPlacas" prefWidth="150.0">
+            <Button fx:id="btnatras" mnemonicParsing="false" onMouseClicked="#atras" prefHeight="29.0" prefWidth="58.0" text="ATRAS">
                <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </ComboBox>
-            <Text fx:id="txtestado" strokeType="OUTSIDE" strokeWidth="0.0" text="Text">
-               <HBox.margin>
-                  <Insets top="50.0" />
-               </HBox.margin>
-            </Text>
-            <Button fx:id="btnSearch" mnemonicParsing="false" onMouseClicked="#buscarOferta" prefHeight="26.0" prefWidth="70.0" text="BUSCAR">
-               <HBox.margin>
-                  <Insets left="30.0" />
-               </HBox.margin>
-            </Button>
-            <Button fx:id="btnatras" mnemonicParsing="false" onMouseClicked="#atras" text="ATRAS">
-               <HBox.margin>
-                  <Insets left="100.0" />
+                  <Insets left="30.0" top="34.5" />
                </HBox.margin>
             </Button>
          </children>
       </HBox>
    </top>
+   <left>
+      <VBox prefHeight="304.0" prefWidth="233.0" BorderPane.alignment="CENTER">
+         <children>
+            <Text strokeType="OUTSIDE" strokeWidth="0.0" text="SELECCIONE LA PLACA">
+               <VBox.margin>
+                  <Insets left="60.0" top="50.0" />
+               </VBox.margin>
+            </Text>
+            <ComboBox fx:id="cbxPlacas" onAction="#elegirPlaca" onMouseReleased="#filtrarPlacas" prefWidth="150.0">
+               <VBox.margin>
+                  <Insets left="50.0" top="20.0" />
+               </VBox.margin>
+            </ComboBox>
+            <Button fx:id="btnSearch" mnemonicParsing="false" onMouseClicked="#buscarOferta" prefHeight="26.0" prefWidth="70.0" text="BUSCAR">
+               <VBox.margin>
+                  <Insets left="85.0" top="20.0" />
+               </VBox.margin>
+            </Button>
+         </children>
+      </VBox>
+   </left>
    <center>
-      <ScrollPane fx:id="scrollOfertas" prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+      <ScrollPane fx:id="scrollOfertas" prefHeight="244.0" prefWidth="295.0" BorderPane.alignment="CENTER">
          <content>
-            <FlowPane fx:id="flowOfertas" prefHeight="200.0" prefWidth="200.0" />
+            <VBox fx:id="vbox" prefHeight="200.0" prefWidth="100.0" />
          </content>
+         <BorderPane.margin>
+            <Insets bottom="20.0" right="100.0" />
+         </BorderPane.margin>
       </ScrollPane>
    </center>
 </BorderPane>

@@ -18,14 +18,17 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.geometry.Insets;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.input.MouseEvent;
+import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.FlowPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
 import javafx.scene.text.Text;
 
 /**
@@ -44,8 +47,6 @@ public class AceptarOfertaController implements Initializable {
      private ArrayList<Oferta> ofertas;
      private ArrayList<Oferta> oferta_vehiculo;
     @FXML
-    private FlowPane flowOfertas;
-    @FXML
     private ComboBox cbxPlacas;
     @FXML
     private Button btnatras;
@@ -53,6 +54,8 @@ public class AceptarOfertaController implements Initializable {
     private Button btnSearch;
     @FXML
     private ScrollPane scrollOfertas;
+    @FXML
+    private VBox vbox;
 
     /**
      * Initializes the controller class.
@@ -156,47 +159,56 @@ public class AceptarOfertaController implements Initializable {
 
     @FXML
     private void buscarOferta(MouseEvent event) {
-       flowOfertas.getChildren().clear();
-       /* oferta_vehiculo.sort((Oferta of1,Oferta of2) -> of2.compareTo(of1));*/
+     vbox.getChildren().clear();
+       
         for(Vehiculo v : vehiculos){
        
          
                if( v.getPlaca().equals(this.placa) && !v.getOfertas().isEmpty() ){
                    this.oferta_vehiculo= v.getOfertas();
+                    oferta_vehiculo.sort((Oferta of1,Oferta of2) -> of2.compareTo(of1));
                    System.out.println(this.oferta_vehiculo);
                    for(Oferta of : this.oferta_vehiculo){
-                    Text tx = new Text("EXISTE UNA OFERTA");
-                    Text tx_Placa = new Text(of.getPlaca_vehiculo());
-                    Text tx_precio_ofertado = new Text("EL PRECIO OFERTADO ES:"+of.getPrecio_ofertado());
-                    Text tx_comprador = new Text(of.getCorreo_comprador());
+                    
+                    
+                    Text tx_comprador = new Text("CORREO DEL COMPRADOR:  "+of.getCorreo_comprador());
+                    tx_comprador.setFont(Font.font ("Verdana", 14));
+;
+                    Text tx_precio_ofertado = new Text("EL PRECIO OFERTADO ES:  "+of.getPrecio_ofertado());
                     Button btn = new Button();
                     btn.setText("ACEPTAR");
                     
                     btn.setOnMouseClicked((MouseEvent e)->{
-                        
+                        Usuario.enviarCorreo(of.getCorreo_comprador(),v.getPlaca(), v.getModelo(), v.getMotor(), of.getPrecio_ofertado(), v.getPlaca());
                        ArrayList<Oferta> oferta_eliminada = v.getOfertas();
                        oferta_eliminada.clear();
                        v.setOfertas(oferta_eliminada);
                        ofertas.remove(of);
                        vehiculos.remove(v);
+                       
                        Vehiculo.guardarVehiculos("vehiculos.ser", vehiculos);
                        Oferta.guardarOfertas("ofertas.ser", ofertas);
-                       Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Se acepto la oferta del usuario"+of.getCorreo_comprador());
+                       Alert a = new Alert(Alert.AlertType.CONFIRMATION,"Se acepto la oferta del usuario:  "+of.getCorreo_comprador());
                        a.show();
-                       flowOfertas.getChildren().clear();
+                      vbox.getChildren().clear();
+                     
+                      
                        
+                      
+                      
                    });
                    
-                    Text txt = new Text("si hay ofertas");
-                    VBox vbox = new VBox();
-                    vbox.getChildren().add(tx);
-                    vbox.getChildren().add( tx_Placa);
+                    
+                   
+                   
                     vbox.getChildren().add(tx_precio_ofertado);
                     vbox.getChildren().add(tx_comprador);
                     vbox.getChildren().add(btn);
-                    vbox.setPrefWidth(200);
+                    vbox.setPadding(new Insets(30, 30, 30, 30));
+                   /* vbox.setPrefWidth(200);
                     vbox.setPrefHeight(200);
-                    flowOfertas.getChildren().add(vbox);
+                    vbox.setPadding(new Insets(10, 10, 10, 10));
+                   */
                    }
                    
                }else if( v.getPlaca().equals(this.placa) && v.getOfertas().isEmpty()){
@@ -213,8 +225,7 @@ public class AceptarOfertaController implements Initializable {
                
            
         
-        scrollOfertas.setFitToWidth(true);
-        scrollOfertas.setFitToHeight(true);
+       
     }
         
         
